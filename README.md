@@ -22,7 +22,7 @@ uv pip install ai-blame
 
 Or from source:
 ```bash
-git clone https://github.com/bbop-skills/ai-blame
+git clone https://github.com/ai4curation/ai-blame
 cd ai-blame
 uv sync
 ```
