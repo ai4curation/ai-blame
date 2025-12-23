@@ -140,7 +140,11 @@ The combination provides complete traceability:
 
 ## Future Directions
 
-- **Multi-agent support** — Track contributions from different AI agents (Cursor, Aider, etc.)
+- **Multi-agent support** — OpenAI Codex is planned; PRs welcome for other agents
 - **Semantic diff** — Capture *what* changed, not just *that* it changed
 - **Verification** — Cryptographic signatures for provenance data
 - **Integration** — Hooks for CI/CD pipelines and documentation systems
+
+## Background
+
+This project originated from discussions about AI-assisted curation workflows. See the original issue for context: [ai4curation/aidocs#62](https://github.com/ai4curation/aidocs/issues/62)
