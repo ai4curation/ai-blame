@@ -1,0 +1,11 @@
+{
+  "id": "item_123",
+  "name": "Sample Record",
+  "active": true,
+  "score": 87.5,
+  "categories": ["alpha", "beta", "gamma"],
+  "attributes": {
+    "color": "blue",
+    "size": "medium"
+  }
+}

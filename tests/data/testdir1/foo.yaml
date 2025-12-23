@@ -1,0 +1,10 @@
+name: example_entity
+id: EX:001
+description: A sample entry for testing
+status: reviewed
+count: 42
+last_modified: 2025-12-22
+tags:
+  - test
+  - sample
+  - demo
