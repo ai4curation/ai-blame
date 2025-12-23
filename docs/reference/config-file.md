@@ -94,7 +94,6 @@ Pattern for generating sidecar filenames. Only used with `sidecar` policy.
 | `{name}` | Full filename | `main.py` | `main.py` |
 | `{stem}` | Filename without extension | `main.py` | `main` |
 | `{ext}` | Extension with dot | `main.py` | `.py` |
-| `{dir}` | Parent directory | `src/main.py` | `src` |
 
 **Examples:**
 

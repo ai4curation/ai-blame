@@ -112,7 +112,6 @@ def resolve_sidecar_path(source_path: Path, pattern: str) -> Path:
     Resolve sidecar file path from source path and pattern.
 
     Pattern variables:
-    - {dir}: parent directory
     - {name}: filename with extension
     - {stem}: filename without extension
     - {ext}: extension with dot
@@ -132,7 +131,6 @@ def resolve_sidecar_path(source_path: Path, pattern: str) -> Path:
     ext = source_path.suffix
 
     result = pattern.format(
-        dir=str(parent),
         name=name,
         stem=stem,
         ext=ext,
