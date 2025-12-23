@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/ai-blame-logo.png" alt="ai-blame logo" width="200">
+</p>
+
 # ai-blame
 
 Extract provenance/audit trails from AI agent execution traces.
@@ -33,7 +37,7 @@ uv sync
 # Show stats about available traces
 ai-blame stats
 
-# Dry run - preview what curation_history would be added
+# Dry run - preview what edit_history would be added
 ai-blame mine --initial-and-recent
 
 # Actually apply changes to files
@@ -45,12 +49,12 @@ ai-blame mine Asthma.yaml --initial-and-recent
 
 ## Output Format
 
-Appends a `curation_history` section to YAML files:
+Appends a `edit_history` section to YAML files:
 
 ```yaml
 # ... existing content ...
 
-curation_history:
+edit_history:
   - timestamp: "2025-12-01T08:03:42Z"
     model: claude-opus-4-5-20251101
     action: CREATED
@@ -65,7 +69,7 @@ curation_history:
 2. Identifies successful `Edit` and `Write` tool operations
 3. Extracts metadata: timestamp, model, file path
 4. Groups by file and filters (first+last, size thresholds)
-5. Appends `curation_history` to affected files
+5. Appends `edit_history` to affected files
 
 ## Trace Directory Detection
 

@@ -42,23 +42,35 @@ NEVER required, if you think you need them, it's likely a bad smell that your lo
 ## Project Architecture
 
 ### Core Structure
-- **src/my_awesome_tool/** - Main package containing the CLI and application logic
-  - `cli.py` - Typer-based CLI interface, entry point for the application
+- **src/ai_blame/** - Main package
+  - `cli.py` - Typer-based CLI interface, entry point (`ai-blame` command)
+  - `extractor.py` - Logic for extracting provenance from Claude Code trace files (JSONL)
+  - `models.py` - Data models for curation history entries
+  - `updater.py` - Logic for updating YAML files with curation history
 - **tests/** - Test suite using pytest with parametrized tests
 - **docs/** - MkDocs-managed documentation with Material theme
 
+### What the Tool Does
+1. Scans Claude Code trace files (`~/.claude/projects/<encoded-cwd>/`) in JSONL format
+2. Identifies successful `Edit` and `Write` tool operations
+3. Extracts metadata: timestamp, model, file path
+4. Groups by file and filters (first+last, size thresholds)
+5. Appends `edit_history` sections to affected YAML files
+
 ### Technology Stack
 - **Python 3.10+** with `uv` for dependency management
-- **LinkML** for data modeling (linkml-runtime)
 - **Typer** for CLI interface
+- **PyYAML** for YAML file manipulation
 - **pytest** for testing
 - **mypy** for type checking
 - **ruff** for linting and formatting
 - **MkDocs Material** for documentation
+- **LinkML** (dev dependency) for data modeling
 
 ### Key Configuration Files
 - `pyproject.toml` - Python project configuration, dependencies, and tool settings
 - `justfile` - Command runner recipes for common development tasks
+- `project.justfile` - Project-specific recipes (imported by main justfile)
 - `mkdocs.yml` - Documentation configuration
 - `uv.lock` - Locked dependency versions
 
@@ -66,5 +78,5 @@ NEVER required, if you think you need them, it's likely a bad smell that your lo
 
 1. Dependencies are managed via `uv` - use `uv add` for new dependencies
 2. All commands are run through `just` or `uv run`
-3. The project uses dynamic versioning from git tags
-4. Documentation is auto-deployed to GitHub Pages at https://monarch-initiative.github.io/my-awesome-tool
+3. The project uses dynamic versioning from git tags (uv-dynamic-versioning)
+4. GitHub repo: https://github.com/ai4curation/ai-blame
