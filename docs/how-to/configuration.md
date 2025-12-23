@@ -72,7 +72,6 @@ Given `src/main.py`, this creates `src/main.history.yaml`.
 | `{name}` | Full filename | `main.py` |
 | `{stem}` | Filename without extension | `main` |
 | `{ext}` | Extension with dot | `.py` |
-| `{dir}` | Parent directory | `src` |
 
 **Examples:**
 
