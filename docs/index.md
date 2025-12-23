@@ -64,8 +64,8 @@ edit_history:
 | Agent | Status |
 |-------|--------|
 | Claude Code | ✅ Supported |
-| Cursor | 🔜 Planned |
-| Aider | 🔜 Planned |
+| OpenAI Codex | 🔜 Planned |
+| Others (Cursor, Aider, etc.) | PRs welcome! |
 
 ## Installation
 

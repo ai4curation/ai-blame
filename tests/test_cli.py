@@ -14,9 +14,18 @@ runner = CliRunner()
 
 # Path to test data that simulates a user's home directory
 TEST_DATA_DIR = Path(__file__).parent / "data"
-TRACE_DIR = TEST_DATA_DIR / ".claude" / "projects" / "-Users-cjm-repos-ai-blame-tests-data"
 
-# The original path that appears in the trace files
+# The original encoded path in the checked-in test data
+ORIGINAL_ENCODED_PATH = "-Users-cjm-repos-ai-blame-tests-data"
+ORIGINAL_TRACE_DIR = TEST_DATA_DIR / ".claude" / "projects" / ORIGINAL_ENCODED_PATH
+
+# Compute the trace directory based on the actual resolved path
+# Claude Code encodes paths by replacing / with -
+_resolved_test_data = TEST_DATA_DIR.resolve()
+_encoded_path = str(_resolved_test_data).replace("/", "-")
+TRACE_DIR = TEST_DATA_DIR / ".claude" / "projects" / _encoded_path
+
+# The original path that appears in the trace files (for rewriting)
 ORIGINAL_TRACE_PATH = "/Users/cjm/repos/ai-blame/tests/data"
 
 
@@ -54,8 +63,8 @@ def temp_workspace(tmp_path: Path) -> Path:
     trace_dest = tmp_path / ".claude" / "projects" / encoded_tmp_path
     trace_dest.mkdir(parents=True, exist_ok=True)
 
-    # Copy and rewrite trace files
-    for trace_file in TRACE_DIR.glob("*.jsonl"):
+    # Copy and rewrite trace files from the original checked-in location
+    for trace_file in ORIGINAL_TRACE_DIR.glob("*.jsonl"):
         rewrite_trace_file(
             trace_file,
             trace_dest / trace_file.name,
