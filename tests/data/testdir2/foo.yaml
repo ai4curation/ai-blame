@@ -1,0 +1,9 @@
+name: another_entity
+id: EX:002
+description: Second sample entry for testing
+status: pending
+priority: high
+metadata:
+  created_by: test_user
+  version: 1.0
+

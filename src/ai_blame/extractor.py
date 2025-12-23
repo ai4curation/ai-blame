@@ -113,6 +113,9 @@ def parse_trace_file(trace_path: Path, file_pattern: str = "") -> Iterator[EditR
             parent = messages_by_uuid[parent_uuid]
             model = parent.get("message", {}).get("model")
 
+        # Get agent version from the record
+        agent_version = record.get("version")
+
         # Parse timestamp
         ts_str = record.get("timestamp", "")
         timestamp = datetime.fromisoformat(ts_str.replace("Z", "+00:00")) if ts_str else datetime.now()
@@ -124,6 +127,7 @@ def parse_trace_file(trace_path: Path, file_pattern: str = "") -> Iterator[EditR
             session_id=record.get("sessionId", "unknown"),
             is_create=tool_result.get("type") == "create",
             change_size=calculate_change_size(tool_result),
+            agent_version=agent_version,
         )
 
 
@@ -216,6 +220,8 @@ def convert_to_file_histories(
                     timestamp=edit.timestamp,
                     model=edit.model,
                     action=action,
+                    agent_tool=edit.agent_tool,
+                    agent_version=edit.agent_version,
                 )
             )
 

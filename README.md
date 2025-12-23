@@ -1,94 +1,130 @@
+<p align="center">
+  <img src="docs/assets/ai-blame-logo.png" alt="ai-blame logo" width="200">
+</p>
+
 # ai-blame
 
-Extract provenance/audit trails from AI agent execution traces.
+**Extract provenance from AI agent execution traces.**
 
 Like `git blame`, but for AI-assisted edits.
 
-## Problem Statement
+[![PyPI](https://img.shields.io/pypi/v/ai-blame)](https://pypi.org/project/ai-blame/)
+[![Documentation](https://img.shields.io/badge/docs-ai4curation.github.io-blue)](https://ai4curation.github.io/ai-blame)
+[![License](https://img.shields.io/badge/license-BSD--3--Clause-green)](LICENSE)
 
-As AI agents increasingly assist with knowledge base curation, we need to track provenance — which agent/model made what changes, when, and why.
+## Why?
 
-See: https://github.com/ai4curation/aidocs/issues/62
+AI coding assistants modify your files, but `git blame` only shows who *committed* the changes—not which AI model actually wrote them. `ai-blame` fills this gap by extracting provenance from execution traces and embedding it in your files.
 
-## Supported Trace Sources
+## Features
 
-- **Claude Code** traces (`~/.claude/projects/<encoded-cwd>/`)
+- **Automatic trace discovery** — Finds Claude Code traces based on your project directory
+- **Multiple output modes** — Append to files, create sidecars, or embed as comments
+- **Configurable per file type** — Different policies for YAML, JSON, Python, etc.
+- **Dry-run by default** — Preview changes before applying
+- **Flexible filtering** — By file pattern, change size, or time range
 
 ## Installation
 
 ```bash
+pip install ai-blame
+
+# Or with uv
 uv pip install ai-blame
 ```
 
-Or from source:
-```bash
-git clone https://github.com/ai4curation/ai-blame
-cd ai-blame
-uv sync
-```
-
-## Usage
+## Quick Start
 
 ```bash
-# Show stats about available traces
+# Check what traces are available
 ai-blame stats
 
-# Dry run - preview what curation_history would be added
+# Preview what would be added (dry run)
 ai-blame mine --initial-and-recent
 
-# Actually apply changes to files
+# Apply changes
 ai-blame mine --apply --initial-and-recent
 
-# Filter to specific file
-ai-blame mine Asthma.yaml --initial-and-recent
+# Filter to specific files
+ai-blame mine --pattern ".py" --apply
 ```
 
-## Output Format
+## Output Examples
 
-Appends a `curation_history` section to YAML files:
+### YAML/JSON files — Append directly
 
 ```yaml
-# ... existing content ...
+# config.yaml
+name: my-project
+version: 1.0
 
-curation_history:
-  - timestamp: "2025-12-01T08:03:42Z"
+edit_history:
+  - timestamp: "2025-12-01T08:03:42+00:00"
     model: claude-opus-4-5-20251101
+    agent_tool: claude-code
     action: CREATED
-  - timestamp: "2025-12-15T20:34:29Z"
-    model: claude-opus-4-5-20251101
-    action: EDITED
 ```
 
-## How It Works
+### Code files — Sidecar or comments
 
-1. Scans Claude Code trace files (JSONL format)
-2. Identifies successful `Edit` and `Write` tool operations
-3. Extracts metadata: timestamp, model, file path
-4. Groups by file and filters (first+last, size thresholds)
-5. Appends `curation_history` to affected files
+```python
+# main.py (with comment policy)
 
-## Trace Directory Detection
+def hello():
+    print("Hello, world!")
 
-If `--trace-dir` is not specified, the tool looks for traces in:
-```
-~/.claude/projects/<encoded-cwd>/
-```
-
-Where `<encoded-cwd>` is your current working directory with `/` replaced by `-`.
-
-For example, `/Users/cjm/repos/dismech` becomes:
-```
-~/.claude/projects/-Users-cjm-repos-dismech/
+# --- edit_history ---
+# - timestamp: '2025-12-01T08:03:42+00:00'
+#   model: claude-opus-4-5-20251101
+#   action: CREATED
+# --- end edit_history ---
 ```
 
-## Developer Tools
+Or use sidecar files: `main.py` → `main.history.yaml`
 
-There are several pre-defined command-recipes available.
-They are written for the command runner [just](https://github.com/casey/just/). To list all pre-defined commands, run `just` or `just --list`.
+## Configuration
 
-## Credits
+Create `.ai-blame.yaml` in your project root:
 
-This project uses the template [monarch-project-copier](https://github.com/monarch-initiative/monarch-project-copier)
+```yaml
+defaults:
+  policy: sidecar
+  sidecar_pattern: "{stem}.history.yaml"
+
+rules:
+  - pattern: "*.yaml"
+    policy: append
+  - pattern: "*.json"
+    policy: append
+    format: json
+  - pattern: "*.py"
+    policy: comment
+    comment_syntax: hash
+  - pattern: "tests/**"
+    policy: skip
+```
+
+## Supported Agents
+
+| Agent | Status |
+|-------|--------|
+| Claude Code | ✅ Supported |
+| OpenAI Codex | 🔜 Planned |
+| Others | [PRs welcome!](CONTRIBUTING.md) |
+
+## Documentation
+
+Full documentation: **[ai4curation.github.io/ai-blame](https://ai4curation.github.io/ai-blame)**
+
+- [Getting Started](https://ai4curation.github.io/ai-blame/tutorials/getting-started/)
+- [Configuration Guide](https://ai4curation.github.io/ai-blame/how-to/configuration/)
+- [CLI Reference](https://ai4curation.github.io/ai-blame/reference/cli/)
+
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+PRs especially welcome for additional agent support (Cursor, Aider, Copilot, etc.).
 
 ## License
 

@@ -1,26 +1,63 @@
 """CLI for AI Log Miner."""
 
-from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
 
+from .config import find_config, get_default_config, load_config
 from .extractor import (
     apply_filters,
     convert_to_file_histories,
     extract_edit_history,
-    get_default_trace_dir,
 )
-from .models import FilterConfig
-from .updater import preview_update, update_yaml_file
+from .models import FileHistory, FilterConfig, OutputConfig, OutputPolicy
+from .updater import apply_rule, preview_update
 
 app = typer.Typer(help="Mine Claude Code traces for curation provenance.")
 
 
-def print_summary_table(histories: dict[str, "FileHistory"]) -> None:
+def resolve_trace_dir(
+    trace_dir: Optional[Path],
+    target_dir: Optional[Path],
+    home_dir: Optional[Path],
+) -> Path:
+    """
+    Resolve the trace directory from the provided options.
+
+    Priority:
+    1. If trace_dir is provided, use it directly
+    2. Otherwise, compute from target_dir and home_dir:
+       - target_dir defaults to cwd
+       - home_dir defaults to ~
+       - trace_dir = home_dir/.claude/projects/<encoded-target_dir>
+
+    >>> resolve_trace_dir(Path("/explicit/path"), None, None)
+    PosixPath('/explicit/path')
+    """
+    if trace_dir is not None:
+        return trace_dir
+
+    # Resolve target directory (the project we're looking at)
+    if target_dir is None:
+        resolved_target = Path.cwd()
+    else:
+        resolved_target = target_dir.resolve()
+
+    # Resolve home directory (where .claude lives)
+    if home_dir is None:
+        resolved_home = Path.home()
+    else:
+        resolved_home = home_dir.resolve()
+
+    # Encode the target path (replace / with -)
+    encoded_path = str(resolved_target).replace("/", "-")
+
+    return resolved_home / ".claude" / "projects" / encoded_path
+
+
+def print_summary_table(histories: dict[str, FileHistory]) -> None:
     """Print summary table of edits per file."""
-    from .models import FileHistory
 
     print("\n=== Summary ===")
     print(f"{'File':<50} | {'Edits':>5} | {'First Edit':<20} | {'Last Edit':<20}")
@@ -37,7 +74,7 @@ def print_summary_table(histories: dict[str, "FileHistory"]) -> None:
     print()
 
 
-def print_yaml_previews(histories: dict[str, "FileHistory"], limit: int = 5) -> None:
+def print_yaml_previews(histories: dict[str, FileHistory], limit: int = 5) -> None:
     """Print YAML previews for each file."""
     for i, (path, history) in enumerate(sorted(histories.items())):
         if i >= limit:
@@ -58,7 +95,30 @@ def mine(
         typer.Option(
             "--trace-dir",
             "-t",
-            help="Claude trace directory. Default: ~/.claude/projects/<cwd-encoded>/",
+            help="Claude trace directory (overrides --dir and --home)",
+        ),
+    ] = None,
+    target_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--dir",
+            "-d",
+            help="Target project directory (default: cwd). Traces looked up in $home/.claude/projects/<encoded-dir>/",
+        ),
+    ] = None,
+    home_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--home",
+            help="Home directory where .claude/ lives (default: ~)",
+        ),
+    ] = None,
+    config_file: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--config",
+            "-c",
+            help="Config file path (default: auto-find .ai-blame.yaml)",
         ),
     ] = None,
     apply: Annotated[
@@ -87,42 +147,37 @@ def mine(
     ] = False,
     file_pattern: Annotated[
         str,
-        typer.Option("--pattern", "-p", help="Filter files by path pattern"),
-    ] = "kb/disorders/",
+        typer.Option("--pattern", "-p", help="Filter files by path pattern (e.g., 'kb/' or '.yaml')"),
+    ] = "",
 ) -> None:
     """
     Mine Claude Code traces and add curation history to YAML files.
 
     Extracts successful Edit/Write operations from Claude Code trace logs and
-    appends a curation_history section to each affected file.
+    appends a edit_history section to each affected file.
 
     \b
-    TRACE DIRECTORY DETECTION:
-    If --trace-dir is not specified, the tool looks for traces in:
-      ~/.claude/projects/<encoded-cwd>/
-    where <encoded-cwd> is your current working directory with '/' replaced by '-'.
-    For example, /Users/cjm/repos/dismech becomes:
-      ~/.claude/projects/-Users-cjm-repos-dismech/
+    TRACE DIRECTORY RESOLUTION:
+    The trace directory is determined by (in order of priority):
+      1. --trace-dir: Use this exact path
+      2. --dir + --home: Compute as $home/.claude/projects/<encoded-dir>/
+      3. Default: ~/.claude/projects/<encoded-cwd>/
 
     \b
     EXAMPLES:
-        # Dry run - see what would be added (default)
-        uv run python -m ai_log_miner mine
+        # Mine traces for current directory
+        ai-blame mine
 
-        # Only first + last edit per file (recommended)
-        uv run python -m ai_log_miner mine --initial-and-recent
+        # Mine traces for a specific project directory
+        ai-blame mine --dir /path/to/project
 
-        # Actually apply changes
-        uv run python -m ai_log_miner mine --apply --initial-and-recent
+        # Mine traces from a different home (e.g., test data)
+        ai-blame mine --dir tests/data --home tests/data
 
-        # Filter to a specific file
-        uv run python -m ai_log_miner mine Asthma.yaml
-
-        # Use a different trace directory
-        uv run python -m ai_log_miner mine -t ~/.claude/projects/-other-repo/
+        # Use explicit trace directory
+        ai-blame mine -t ~/.claude/projects/-other-repo/
     """
-    if trace_dir is None:
-        trace_dir = get_default_trace_dir()
+    trace_dir = resolve_trace_dir(trace_dir, target_dir, home_dir)
 
     if not trace_dir.exists():
         typer.echo(f"Trace directory not found: {trace_dir}")
@@ -130,22 +185,38 @@ def mine(
 
     typer.echo(f"Scanning traces in: {trace_dir}")
 
+    # Load output config
+    output_config: OutputConfig
+    if config_file:
+        if not config_file.exists():
+            typer.echo(f"Config file not found: {config_file}")
+            raise typer.Exit(1)
+        output_config = load_config(config_file)
+        typer.echo(f"Using config: {config_file}")
+    else:
+        found_config = find_config()
+        if found_config:
+            output_config = load_config(found_config)
+            typer.echo(f"Using config: {found_config}")
+        else:
+            output_config = get_default_config()
+
     # Build filter config
-    config = FilterConfig(
+    filter_config = FilterConfig(
         initial_and_recent_only=initial_and_recent,
         min_change_size=min_change_size,
         file_pattern=file_pattern,
     )
 
     # Extract edit history
-    edits_by_file = extract_edit_history(trace_dir, config)
+    edits_by_file = extract_edit_history(trace_dir, filter_config)
 
     if not edits_by_file:
         typer.echo("No edits found matching criteria.")
         raise typer.Exit(0)
 
     # Apply filters
-    edits_by_file = apply_filters(edits_by_file, config)
+    edits_by_file = apply_filters(edits_by_file, filter_config)
 
     if not edits_by_file:
         typer.echo("No edits remaining after filtering.")
@@ -193,9 +264,19 @@ def mine(
             typer.echo(f"  Skipping (not found): {rel_path}")
             continue
 
-        success, msg = update_yaml_file(file_path, history, dry_run=False)
+        # Get rule for this file
+        rule = output_config.get_rule_for_file(rel_path)
+        if rule is None:
+            typer.echo(f"  Skipping (no matching rule): {rel_path}")
+            continue
+
+        if rule.policy == OutputPolicy.SKIP:
+            typer.echo(f"  Skipped (policy=skip): {rel_path}")
+            continue
+
+        success, msg = apply_rule(file_path, history, rule, dry_run=False)
         if success:
-            typer.echo(f"  Updated: {rel_path}")
+            typer.echo(f"  {msg}")
         else:
             typer.echo(f"  Failed: {msg}")
 
@@ -207,24 +288,44 @@ def stats(
         typer.Option(
             "--trace-dir",
             "-t",
-            help="Claude trace directory. Default: ~/.claude/projects/<cwd-encoded>/",
+            help="Claude trace directory (overrides --dir and --home)",
+        ),
+    ] = None,
+    target_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--dir",
+            "-d",
+            help="Target project directory (default: cwd). Traces looked up in $home/.claude/projects/<encoded-dir>/",
+        ),
+    ] = None,
+    home_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--home",
+            help="Home directory where .claude/ lives (default: ~)",
         ),
     ] = None,
     file_pattern: Annotated[
         str,
-        typer.Option("--pattern", "-p", help="Filter files by path pattern"),
-    ] = "kb/disorders/",
+        typer.Option("--pattern", "-p", help="Filter files by path pattern (e.g., 'kb/' or '.yaml')"),
+    ] = "",
 ) -> None:
     """
     Show statistics about available traces.
 
     \b
     EXAMPLES:
-        uv run python -m ai_log_miner stats
-        uv run python -m ai_log_miner stats --pattern "kb/"
+        # Stats for current directory
+        ai-blame stats
+
+        # Stats for a specific project
+        ai-blame stats --dir /path/to/project
+
+        # Stats from test data
+        ai-blame stats --dir tests/data --home tests/data
     """
-    if trace_dir is None:
-        trace_dir = get_default_trace_dir()
+    trace_dir = resolve_trace_dir(trace_dir, target_dir, home_dir)
 
     if not trace_dir.exists():
         typer.echo(f"Trace directory not found: {trace_dir}")
@@ -247,7 +348,8 @@ def stats(
     edits_by_file = extract_edit_history(trace_dir, config)
 
     total_edits = sum(len(edits) for edits in edits_by_file.values())
-    typer.echo(f"\nFiles with edits matching '{file_pattern}': {len(edits_by_file)}")
+    pattern_desc = f"matching '{file_pattern}'" if file_pattern else "(all files)"
+    typer.echo(f"\nFiles with edits {pattern_desc}: {len(edits_by_file)}")
     typer.echo(f"Total successful edits: {total_edits}")
 
 
