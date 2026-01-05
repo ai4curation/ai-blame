@@ -1,6 +1,6 @@
 [package]
 name = "ai-blame"
-version = "0.1.0"
+version = "0.5.0"
 edition = "2021"
 authors = ["Chris Mungall"]
 description = "Extract provenance from AI agent execution traces - Rust port of ai-blame"
