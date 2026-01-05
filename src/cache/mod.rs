@@ -115,10 +115,11 @@ impl CacheManager {
                 // Create trace_files table
                 conn.execute(
                     "CREATE TABLE IF NOT EXISTS trace_files (
-                        file_path TEXT PRIMARY KEY,
+                        id INTEGER PRIMARY KEY,
+                        file_path TEXT NOT NULL UNIQUE,
                         provider TEXT NOT NULL,
-                        file_mtime_ns TEXT NOT NULL,
-                        file_size_bytes TEXT NOT NULL,
+                        file_mtime_ns INTEGER NOT NULL,
+                        file_size_bytes INTEGER NOT NULL,
                         last_parsed_at TEXT NOT NULL,
                         record_count INTEGER NOT NULL DEFAULT 0,
                         parse_duration_ms INTEGER
@@ -139,7 +140,8 @@ impl CacheManager {
                 // Create edit_records table
                 conn.execute(
                     "CREATE TABLE IF NOT EXISTS edit_records (
-                        trace_file_path TEXT NOT NULL,
+                        id INTEGER PRIMARY KEY,
+                        trace_file_id INTEGER NOT NULL,
                         file_path TEXT NOT NULL,
                         timestamp TEXT NOT NULL,
                         model TEXT NOT NULL,
@@ -151,7 +153,8 @@ impl CacheManager {
                         old_string TEXT,
                         new_string TEXT,
                         structured_patch TEXT,
-                        create_content TEXT
+                        create_content TEXT,
+                        FOREIGN KEY (trace_file_id) REFERENCES trace_files(id)
                     )",
                     [],
                 )?;
@@ -172,7 +175,7 @@ impl CacheManager {
                 )?;
 
                 conn.execute(
-                    "CREATE INDEX IF NOT EXISTS idx_edits_trace_file ON edit_records(trace_file_path)",
+                    "CREATE INDEX IF NOT EXISTS idx_edits_trace_file ON edit_records(trace_file_id)",
                     [],
                 )?;
 
@@ -201,12 +204,13 @@ impl CacheManager {
 
         // Fetch all EditRecords for this file
         let mut stmt = conn.prepare(
-            "SELECT file_path, timestamp, model, session_id, is_create, change_size,
-                    agent_tool, agent_version, old_string, new_string,
-                    structured_patch, create_content
-             FROM edit_records
-             WHERE trace_file_path = ?1
-             ORDER BY timestamp",
+            "SELECT e.file_path, e.timestamp, e.model, e.session_id, e.is_create, e.change_size,
+                    e.agent_tool, e.agent_version, e.old_string, e.new_string,
+                    e.structured_patch, e.create_content
+             FROM edit_records e
+             JOIN trace_files t ON e.trace_file_id = t.id
+             WHERE t.file_path = ?1
+             ORDER BY e.timestamp",
         )?;
 
         struct CachedEditRow {
@@ -301,26 +305,31 @@ impl CacheManager {
             duckdb::params![
                 trace_file.to_string_lossy(),
                 provider,
-                mtime_ns.to_string(),
-                size_bytes.to_string(),
+                mtime_ns,
+                size_bytes,
                 Utc::now().to_rfc3339(),
                 edits.len() as i64,
                 parse_duration_ms as i64,
             ],
         )?;
 
-        let trace_file_str = trace_file.to_string_lossy();
+        // Get the id of the inserted trace_file
+        let trace_file_id: i64 = conn.query_row(
+            "SELECT id FROM trace_files WHERE file_path = ?1",
+            [trace_file.to_string_lossy().as_ref()],
+            |row| row.get(0),
+        )?;
 
         // Delete old edits for this trace file
         conn.execute(
-            "DELETE FROM edit_records WHERE trace_file_path = ?1",
-            [trace_file_str.as_ref()],
+            "DELETE FROM edit_records WHERE trace_file_id = ?1",
+            [trace_file_id],
         )?;
 
         // Insert new edits
         let mut stmt = conn.prepare(
             "INSERT INTO edit_records
-             (trace_file_path, file_path, timestamp, model, session_id, is_create,
+             (trace_file_id, file_path, timestamp, model, session_id, is_create,
               change_size, agent_tool, agent_version, old_string, new_string,
               structured_patch, create_content)
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
@@ -328,7 +337,7 @@ impl CacheManager {
 
         for edit in edits {
             stmt.execute(duckdb::params![
-                &trace_file_str,
+                trace_file_id,
                 &edit.file_path,
                 edit.timestamp.to_rfc3339(),
                 &edit.model,
@@ -439,9 +448,10 @@ impl CacheManager {
         for file in trace_files {
             let file_path_str = file.to_string_lossy();
 
-            // Delete edit records for this trace file
+            // Delete edit records for this trace file (cascade will happen via foreign key)
+            // But we'll do it explicitly for clarity
             conn.execute(
-                "DELETE FROM edit_records WHERE trace_file_path = ?1",
+                "DELETE FROM edit_records WHERE trace_file_id IN (SELECT id FROM trace_files WHERE file_path = ?1)",
                 [file_path_str.as_ref()],
             )?;
 
