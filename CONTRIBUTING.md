@@ -187,7 +187,7 @@ ai-blame --version
 # e.g., change "0.1.0" to "0.2.0"
 
 git add Cargo.toml
-git commit -m "Bump version to 0.2.0"
+git commit -m "Bump version to 0.5.0"
 git push origin main
 ```
 
