@@ -1,0 +1,17 @@
+[package]
+name = "ai-blame-ui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+ai-blame = { path = "..", default-features = false }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tauri = { version = "1.5", features = ["dialog-open", "dialog-save"] }
+dirs = "5.0"
+tokio = { version = "1", features = ["sync"] }
+
+[build-dependencies]
+tauri-build = { version = "1.5" }

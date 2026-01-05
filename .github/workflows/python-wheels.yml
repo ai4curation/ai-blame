@@ -1,0 +1,118 @@
+name: Build Python Wheels
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:  # Allow manual triggering for testing
+
+# Global permissions - most jobs only need to read contents
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [x86_64, aarch64]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1.44.0
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist --find-interpreter
+          sccache: 'true'
+          manylinux: auto
+      
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-linux-${{ matrix.target }}
+          path: dist
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        target: [x64, x86]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1.44.0
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist --find-interpreter
+          sccache: 'true'
+      
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-windows-${{ matrix.target }}
+          path: dist
+
+  macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        target: [x86_64, aarch64]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1.44.0
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist --find-interpreter
+          sccache: 'true'
+      
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-macos-${{ matrix.target }}
+          path: dist
+
+  sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build sdist
+        uses: PyO3/maturin-action@v1.44.0
+        with:
+          command: sdist
+          args: --out dist
+      
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-sdist
+          path: dist
+
+  release:
+    name: Release to PyPI
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    needs: [linux, windows, macos, sdist]
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ai-blame
+    permissions:
+      # Override global permissions for this job to enable trusted publishing
+      id-token: write  # Required for OIDC trusted publishing to PyPI
+      contents: read
+    
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          path: dist
+          merge-multiple: true
+      
+      - name: Publish to PyPI
+        uses: PyO3/maturin-action@v1.44.0
+        with:
+          command: upload
+          args: --non-interactive --skip-existing dist/*

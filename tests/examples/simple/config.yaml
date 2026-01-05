@@ -1,0 +1,12 @@
+name: test-project
+version: "1.0.0"
+
+settings:
+  debug: false
+  max_retries: 5
+  timeout: 30
+
+items:
+  - apple
+  - banana
+  - cherry

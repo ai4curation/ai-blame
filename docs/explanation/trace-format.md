@@ -1,14 +1,18 @@
 # Trace Format
 
-This document explains the structure of Claude Code trace files that `ai-blame` parses.
+This document explains the structure of trace files that `ai-blame` parses.
 
-## File Location
+## Claude Code Traces
+
+### File Location
 
 Claude Code stores traces in:
 
 ```
 ~/.claude/projects/<encoded-cwd>/
 ```
+
+`<encoded-cwd>` is a filesystem-safe encoding of your working directory path (path separators become `-`, and punctuation like `.` may also be normalized to `-`).
 
 Each session creates a JSONL file named with a UUID:
 
@@ -21,214 +25,88 @@ Each session creates a JSONL file named with a UUID:
 
 Files prefixed with `agent-` are from subagent invocations.
 
-## JSONL Structure
+### JSONL Structure
 
-Each line is a JSON object representing a message in the conversation:
+Each line is a JSON object representing a message in the conversation.
 
-```jsonl
-{"type": "user", "uuid": "msg-1", ...}
-{"type": "assistant", "uuid": "msg-2", ...}
-{"type": "user", "uuid": "msg-3", "toolUseResult": {...}}
-```
+### Key Fields for Extraction
 
-## Message Types
-
-### User Messages
-
-Regular user input:
-
-```json
-{
-  "type": "user",
-  "uuid": "2447d793-4010-4028-bb03-b7d12f44f0a8",
-  "parentUuid": null,
-  "sessionId": "a1b2c3d4-5678-90ab-cdef",
-  "timestamp": "2025-12-22T17:09:15.442Z",
-  "cwd": "/Users/alice/myproject",
-  "version": "2.0.75",
-  "message": {
-    "role": "user",
-    "content": "Create a new config file"
-  }
-}
-```
-
-### Assistant Messages
-
-Model responses, often containing tool use:
-
-```json
-{
-  "type": "assistant",
-  "uuid": "537588d8-3c9b-42a2-b0d0-55e9b57abe93",
-  "parentUuid": "2447d793-4010-4028-bb03-b7d12f44f0a8",
-  "sessionId": "a1b2c3d4-5678-90ab-cdef",
-  "timestamp": "2025-12-22T17:09:18.879Z",
-  "version": "2.0.75",
-  "message": {
-    "model": "claude-opus-4-5-20251101",
-    "role": "assistant",
-    "content": [
-      {
-        "type": "tool_use",
-        "id": "toolu_011MHKqGJhiXXZkWSrsTMwMp",
-        "name": "Write",
-        "input": {
-          "file_path": "/Users/alice/myproject/config.yaml",
-          "content": "name: myproject\nversion: 1.0\n"
-        }
-      }
-    ]
-  }
-}
-```
-
-### Tool Results
-
-User messages containing `toolUseResult` are the results of tool invocations:
-
-```json
-{
-  "type": "user",
-  "uuid": "98506b67-b923-47a3-a6f0-f70771881aa0",
-  "parentUuid": "537588d8-3c9b-42a2-b0d0-55e9b57abe93",
-  "sessionId": "a1b2c3d4-5678-90ab-cdef",
-  "timestamp": "2025-12-22T17:09:19.998Z",
-  "version": "2.0.75",
-  "message": {
-    "role": "user",
-    "content": [
-      {
-        "tool_use_id": "toolu_011MHKqGJhiXXZkWSrsTMwMp",
-        "type": "tool_result",
-        "content": "File created successfully at: /Users/alice/myproject/config.yaml"
-      }
-    ]
-  },
-  "toolUseResult": {
-    "type": "create",
-    "filePath": "/Users/alice/myproject/config.yaml",
-    "content": "name: myproject\nversion: 1.0\n"
-  }
-}
-```
-
-## Tool Result Types
-
-### File Creation (Write)
-
-```json
-{
-  "toolUseResult": {
-    "type": "create",
-    "filePath": "/path/to/new_file.yaml",
-    "content": "file content here",
-    "structuredPatch": []
-  }
-}
-```
-
-### File Edit (Edit)
-
-```json
-{
-  "toolUseResult": {
-    "filePath": "/path/to/existing_file.yaml",
-    "oldString": "original text",
-    "newString": "modified text",
-    "structuredPatch": [
-      {
-        "oldStart": 10,
-        "oldLines": 2,
-        "newStart": 10,
-        "newLines": 3,
-        "lines": [" context", "-old line", "+new line", "+another new line"]
-      }
-    ]
-  }
-}
-```
-
-### Error Results
-
-Failed operations have error indicators:
-
-```json
-{
-  "toolUseResult": {
-    "is_error": true,
-    "error": "File not found: /path/to/missing.yaml"
-  }
-}
-```
-
-Or HTTP-style error codes:
-
-```json
-{
-  "toolUseResult": {
-    "code": 404,
-    "message": "File not found"
-  }
-}
-```
-
-## Key Fields for Extraction
-
-`ai-blame` extracts these fields:
+`ai-blame` extracts these fields when present:
 
 | Field | Location | Description |
 |-------|----------|-------------|
 | `file_path` | `toolUseResult.filePath` | Absolute path to the file |
-| `timestamp` | Root `timestamp` | When the operation occurred |
-| `model` | Parent message's `message.model` | Model identifier |
-| `session_id` | Root `sessionId` | Session identifier |
+| `timestamp` | root `timestamp` | When the operation occurred |
+| `model` | parent assistant `message.model` | Model identifier |
+| `session_id` | root `sessionId` | Session identifier |
 | `is_create` | `toolUseResult.type == "create"` | Whether file was created |
-| `agent_version` | Root `version` | Claude Code version |
+| `agent_version` | root `version` | Claude Code version |
 
-## Parent-Child Relationships
+## Codex/GitHub Copilot Traces
 
-Messages are linked via `uuid` and `parentUuid`:
+### File Location
 
-```mermaid
-graph TD
-    A[User: Create config<br>uuid: msg-1] --> B[Assistant: tool_use Write<br>uuid: msg-2<br>parentUuid: msg-1]
-    B --> C[User: toolUseResult<br>uuid: msg-3<br>parentUuid: msg-2]
+Codex traces may be stored in various locations depending on the client/implementation:
+
+```
+~/.codex/                              # Codex Direct (may have history.jsonl or sessions/)
+~/.codex/sessions/                     # Codex sessions directory
+~/.copilot/traces/                     # GitHub Copilot
+~/.config/github-copilot/traces/       # GitHub Copilot (config variant)
+~/.vscode/copilot/traces/              # VS Code Copilot extension
+~/.cursor/traces/                      # Cursor IDE
+~/.openai/traces/                      # OpenAI API
 ```
 
-To find the model for a tool result:
+`ai-blame` scans these locations automatically and uses any that exist. Files are typically `.jsonl` format (one JSON object per line).
 
-1. Get the `parentUuid` from the tool result message
-2. Look up the parent message by UUID
-3. Extract `message.model` from the parent
+### JSONL Structure
 
-## Other Record Types
+Each line is a JSON object representing a completion or edit event.
 
-The trace may contain other record types that `ai-blame` ignores:
+### Key Fields for Extraction
 
-- `summary` — Session summary
-- `file-history-snapshot` — File state snapshots
-- Encrypted thinking blocks — Lines starting with non-JSON characters
+`ai-blame` extracts these fields when present:
 
-## Example Trace
+| Field | Location | Description |
+|-------|----------|-------------|
+| `file` or `file_path` or `filePath` | root | Path to the file |
+| `timestamp` | root `timestamp` | When the operation occurred (RFC3339) |
+| `model` | root `model` | Model identifier (e.g., "gpt-4", "codex-davinci-002") |
+| `session_id` or `sessionId` | root | Session identifier |
+| `event` or `action` | root | Event type ("create", "edit", "completion") |
+| `content` | root `content` | File content for create operations |
+| `old_content` | root `old_content` | Original content for edits |
+| `new_content` | root `new_content` | New content for edits |
+| `diff` or `patch` | root | Structured diff/patch information |
 
-```jsonl
-{"type":"summary","summary":"Create project configuration"}
-{"type":"user","uuid":"msg-1","message":{"role":"user","content":"Create a config.yaml file"},"timestamp":"2025-12-22T17:09:15.442Z","version":"2.0.75","sessionId":"session-1"}
-{"type":"assistant","uuid":"msg-2","parentUuid":"msg-1","message":{"model":"claude-opus-4-5-20251101","role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"Write","input":{"file_path":"/project/config.yaml","content":"name: myproject\n"}}]},"timestamp":"2025-12-22T17:09:18.879Z","version":"2.0.75","sessionId":"session-1"}
-{"type":"user","uuid":"msg-3","parentUuid":"msg-2","toolUseResult":{"type":"create","filePath":"/project/config.yaml","content":"name: myproject\n"},"timestamp":"2025-12-22T17:09:19.998Z","version":"2.0.75","sessionId":"session-1"}
+### Example Codex Trace Records
+
+**Create event:**
+```json
+{
+  "event": "create",
+  "file": "/path/to/file.py",
+  "model": "gpt-4",
+  "timestamp": "2025-12-01T08:00:00Z",
+  "session_id": "abc123",
+  "content": "def hello():\n    print('Hello')\n"
+}
 ```
 
-This trace shows:
+**Edit event:**
+```json
+{
+  "event": "edit",
+  "file_path": "/path/to/file.py",
+  "model": "gpt-4",
+  "timestamp": "2025-12-01T08:05:00Z",
+  "session_id": "abc123",
+  "old_content": "def hello():\n    pass\n",
+  "new_content": "def hello():\n    print('Hello')\n"
+}
+```
 
-1. User requests a config file
-2. Assistant uses `Write` tool to create it
-3. Tool result confirms successful creation
+## Mixed Traces
 
-`ai-blame` would extract:
-
-- **file_path**: `/project/config.yaml`
-- **timestamp**: `2025-12-22T17:09:19.998Z`
-- **model**: `claude-opus-4-5-20251101`
-- **is_create**: `true`
-- **agent_version**: `2.0.75`
+`ai-blame` can parse trace files containing both Claude Code and Codex format records in the same file, automatically detecting the format of each record.

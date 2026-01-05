@@ -71,7 +71,7 @@ Given `src/main.py`, this creates `src/main.history.yaml`.
 |----------|-------------|---------|
 | `{name}` | Full filename | `main.py` |
 | `{stem}` | Filename without extension | `main` |
-| `{ext}` | Extension with dot | `.py` |
+| `{ext}` | Extension (without dot) | `py` |
 | `{dir}` | Parent directory | `src` |
 
 **Examples:**
@@ -166,62 +166,18 @@ For patterns without `/`, only the filename is matched. For patterns with `/` or
 
 ```bash
 # Auto-find (walks up from cwd)
-ai-blame mine
+ai-blame report
 
 # Explicit path
-ai-blame mine --config /path/to/.ai-blame.yaml
+ai-blame annotate --config /path/to/.ai-blame.yaml --dry-run
 ```
 
-## Example Configurations
+---
 
-### Knowledge Base Project
+## Related Topics
 
-```yaml
-# Append history to knowledge files, skip everything else
-defaults:
-  policy: skip
+- **[Setup & Configuration](../reference/setup.md)** — How to initialize and configure `.ai-blame.yaml`
+- **[Provenance Annotation](../reference/annotation.md)** — Using `report` and `annotate` commands
+- **[File Types](file-types.md)** — Handling different file formats
+- **[Performance and Caching](performance-and-caching.md)** — Optimizing configuration for speed
 
-rules:
-  - pattern: "kb/**/*.yaml"
-    policy: append
-```
-
-### Python Library
-
-```yaml
-# Sidecar for code, append for configs
-defaults:
-  policy: sidecar
-  sidecar_pattern: "{stem}.history.yaml"
-
-rules:
-  - pattern: "*.yaml"
-    policy: append
-  - pattern: "pyproject.toml"
-    policy: skip
-  - pattern: "tests/**"
-    policy: skip
-```
-
-### Mixed Project
-
-```yaml
-defaults:
-  policy: sidecar
-  sidecar_pattern: ".history/{name}.yaml"
-
-rules:
-  - pattern: "*.yaml"
-    policy: append
-  - pattern: "*.json"
-    policy: append
-    format: json
-  - pattern: "*.py"
-    policy: comment
-    comment_syntax: hash
-  - pattern: "*.js"
-    policy: comment
-    comment_syntax: slash
-  - pattern: "docs/**"
-    policy: skip
-```

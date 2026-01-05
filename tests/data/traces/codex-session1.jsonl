@@ -1,0 +1,3 @@
+{"event":"create","file":"/Users/test/project/src/main.rs","model":"gpt-4","timestamp":"2025-12-01T08:00:00Z","session_id":"codex-abc123","content":"fn main() {\n    println!(\"Hello from Codex!\");\n}\n"}
+{"event":"edit","file_path":"/Users/test/project/src/lib.rs","model":"gpt-4","timestamp":"2025-12-01T08:05:00Z","session_id":"codex-abc123","old_content":"pub fn add(a: i32, b: i32) -> i32 {\n    a + b\n}","new_content":"pub fn add(a: i32, b: i32) -> i32 {\n    // Add two numbers\n    a + b\n}"}
+{"event":"edit","file_path":"/Users/test/project/README.md","model":"gpt-4","timestamp":"2025-12-01T08:10:00Z","session_id":"codex-abc123","action":"edit","old_content":"# Project","new_content":"# Project\n\nThis project was created with AI assistance."}

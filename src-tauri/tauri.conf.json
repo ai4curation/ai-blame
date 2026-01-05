@@ -1,0 +1,56 @@
+{
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "withGlobalTauri": true,
+    "devPath": "../ui",
+    "distDir": "../ui"
+  },
+  "package": {
+    "productName": "AI Blame",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "bundle": {
+      "identifier": "org.cmungall.ai-blame",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ]
+    },
+    "allowlist": {
+      "all": false,
+      "dialog": {
+        "all": false,
+        "open": true,
+        "save": true
+      },
+      "fs": {
+        "all": false,
+        "readFile": false,
+        "writeFile": false,
+        "readDir": false,
+        "scope": []
+      }
+    },
+    "windows": [
+      {
+        "title": "AI Blame",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self'; img-src 'self' asset: data:; script-src 'self'"
+    }
+  }
+}

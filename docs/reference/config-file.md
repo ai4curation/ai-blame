@@ -9,7 +9,7 @@ The configuration file should be named `.ai-blame.yaml` and placed in your proje
 You can also specify a config file explicitly:
 
 ```bash
-ai-blame mine --config /path/to/.ai-blame.yaml
+ai-blame annotate --config /path/to/.ai-blame.yaml --dry-run
 ```
 
 ## Schema
@@ -93,17 +93,8 @@ Pattern for generating sidecar filenames. Only used with `sidecar` policy.
 |----------|-------------|---------------|---------------|
 | `{name}` | Full filename | `main.py` | `main.py` |
 | `{stem}` | Filename without extension | `main.py` | `main` |
-| `{ext}` | Extension with dot | `main.py` | `.py` |
+| `{ext}` | Extension (without dot) | `main.py` | `py` |
 | `{dir}` | Parent directory | `src/main.py` | `src` |
-
-**Examples:**
-
-| Pattern | Input | Output |
-|---------|-------|--------|
-| `{stem}.history.yaml` | `main.py` | `main.history.yaml` |
-| `{name}.history.yaml` | `main.py` | `main.py.history.yaml` |
-| `.history/{name}.yaml` | `main.py` | `.history/main.py.yaml` |
-| `.{stem}.history` | `main.py` | `.main.history` |
 
 ### `comment_syntax`
 
@@ -115,105 +106,4 @@ Comment syntax for `comment` policy.
 | `slash` | `// comment` | JavaScript, TypeScript, Go, Rust |
 | `html` | `<!-- comment -->` | HTML, XML, Markdown |
 
----
 
-## Complete Example
-
-```yaml
-# .ai-blame.yaml
-
-# Default: use sidecar files
-defaults:
-  policy: sidecar
-  sidecar_pattern: "{stem}.history.yaml"
-
-rules:
-  # Structured data files - append directly
-  - pattern: "*.yaml"
-    policy: append
-
-  - pattern: "*.yml"
-    policy: append
-
-  - pattern: "*.json"
-    policy: append
-    format: json
-
-  # Knowledge base files - always track
-  - pattern: "kb/**/*.yaml"
-    policy: append
-
-  # Code files - embed as comments
-  - pattern: "*.py"
-    policy: comment
-    comment_syntax: hash
-
-  - pattern: "*.js"
-    policy: comment
-    comment_syntax: slash
-
-  - pattern: "*.ts"
-    policy: comment
-    comment_syntax: slash
-
-  # HTML files
-  - pattern: "*.html"
-    policy: comment
-    comment_syntax: html
-
-  # Skip these files
-  - pattern: "*.md"
-    policy: skip
-
-  - pattern: "*.lock"
-    policy: skip
-
-  - pattern: "tests/**"
-    policy: skip
-
-  - pattern: "docs/**"
-    policy: skip
-
-  - pattern: ".git/**"
-    policy: skip
-```
-
----
-
-## Default Configuration
-
-If no `.ai-blame.yaml` is found, the following defaults are used:
-
-```yaml
-defaults:
-  policy: sidecar
-  sidecar_pattern: "{stem}.history.yaml"
-
-rules:
-  - pattern: "*.yaml"
-    policy: append
-
-  - pattern: "*.yml"
-    policy: append
-
-  - pattern: "*.json"
-    policy: append
-    format: json
-```
-
-This means:
-
-- YAML files get history appended directly
-- JSON files get history appended as JSON
-- Everything else gets a sidecar file
-
----
-
-## Validation
-
-Invalid configurations will cause an error at runtime. Common issues:
-
-- **Missing `pattern`** in a rule
-- **Invalid `policy`** value (must be `append`, `sidecar`, `comment`, or `skip`)
-- **Missing `comment_syntax`** when using `comment` policy
-- **Invalid YAML syntax**
