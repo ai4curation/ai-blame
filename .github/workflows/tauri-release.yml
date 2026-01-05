@@ -54,6 +54,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.target }}-cargo-
 
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^1.5"
+
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
