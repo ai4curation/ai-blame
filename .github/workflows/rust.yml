@@ -18,24 +18,12 @@ jobs:
     
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
-      
-    - name: Cache cargo registry
-      uses: actions/cache@v4
+
+    - name: Cache Rust dependencies
+      uses: Swatinem/rust-cache@v2
       with:
-        path: ~/.cargo/registry
-        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-        
-    - name: Cache cargo index
-      uses: actions/cache@v4
-      with:
-        path: ~/.cargo/git
-        key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
-        
-    - name: Cache target directory
-      uses: actions/cache@v4
-      with:
-        path: target
-        key: ${{ runner.os }}-cargo-target-${{ hashFiles('**/Cargo.lock') }}
+        # Cache the expensive DuckDB build across runs
+        cache-on-failure: true
 
     - name: Build
       run: cargo build --release --verbose
