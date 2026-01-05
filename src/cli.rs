@@ -7,10 +7,12 @@ use crate::extractor::{apply_filters, convert_to_file_histories};
 use crate::models::*;
 use crate::updater::{apply_rule, preview_update};
 use anyhow::{anyhow, Result};
+use chrono::{DateTime, Utc};
 use clap::{CommandFactory, Parser, Subcommand, ValueEnum};
 use clap_complete::{generate, Shell};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum BlameColumn {
@@ -50,6 +52,7 @@ struct BlameConfig {
     columns: Option<String>,
     agent_alias: Vec<(String, String)>,
     model_alias: Vec<(String, String)>,
+    no_header: bool,
 }
 
 #[derive(Parser)]
@@ -272,6 +275,10 @@ enum Commands {
         /// Rebuild cache (invalidate all cached data)
         #[arg(long)]
         rebuild_cache: bool,
+
+        /// Suppress the file metadata header (creation date, etc.)
+        #[arg(long)]
+        no_header: bool,
     },
 
     /// Show timeline of actions in the repository
@@ -719,6 +726,43 @@ fn parse_line_range(spec: &str) -> Option<(usize, usize)> {
     Some((start, end))
 }
 
+/// Get the creation date of a file from git history (date of first commit that introduced it).
+/// Returns None if the file is not tracked by git or git is not available.
+fn get_file_creation_date(file_path: &Path) -> Option<DateTime<Utc>> {
+    // Try to get an absolute path and run git from the repo root
+    let abs_path = file_path
+        .canonicalize()
+        .unwrap_or_else(|_| file_path.to_path_buf());
+    let work_dir = abs_path.parent().unwrap_or(Path::new("."));
+
+    // Get the first commit that introduced this file (oldest commit in the file's history)
+    let output = Command::new("git")
+        .args([
+            "log",
+            "--follow",
+            "--format=%aI",
+            "--reverse",
+            "--diff-filter=A",
+            "--",
+        ])
+        .arg(&abs_path)
+        .current_dir(work_dir)
+        .output()
+        .ok()?;
+
+    if !output.status.success() {
+        return None;
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let first_line = stdout.lines().next()?;
+
+    // Parse the ISO 8601 timestamp
+    DateTime::parse_from_rfc3339(first_line)
+        .ok()
+        .map(|dt| dt.with_timezone(&Utc))
+}
+
 fn blame_command(config: BlameConfig) -> Result<()> {
     let trace_dir = resolve_trace_dir(config.trace_dir, config.target_dir, config.home_dir);
     if !trace_dir.exists() {
@@ -825,6 +869,14 @@ fn blame_command(config: BlameConfig) -> Result<()> {
         agent_aliases: config.agent_alias.into_iter().collect(),
         model_aliases: config.model_alias.into_iter().collect(),
     };
+
+    // Display file metadata header (unless suppressed)
+    if !config.no_header {
+        if let Some(creation_date) = get_file_creation_date(&file_path) {
+            println!("Created: {}", creation_date.format("%Y-%m-%d %H:%M"));
+        }
+        println!();
+    }
 
     let header = format_header(&columns);
     println!("{}", header);
@@ -2440,6 +2492,7 @@ pub fn run() -> Result<()> {
             model_alias,
             no_cache,
             rebuild_cache,
+            no_header,
         } => {
             if rebuild_cache {
                 if let Ok(cwd) = std::env::current_dir() {
@@ -2460,6 +2513,7 @@ pub fn run() -> Result<()> {
                 columns,
                 agent_alias,
                 model_alias,
+                no_header,
             })
         }
         Commands::Timeline {
