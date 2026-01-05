@@ -29,24 +29,9 @@ jobs:
           name: wheels-linux-x86_64
           path: dist
 
-  linux-aarch64:
-    runs-on: ubuntu-24.04-arm
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build wheels
-        uses: PyO3/maturin-action@v1.44.0
-        with:
-          target: aarch64
-          args: --release --out dist --find-interpreter
-          sccache: 'true'
-          manylinux: auto
-
-      - name: Upload wheels
-        uses: actions/upload-artifact@v4
-        with:
-          name: wheels-linux-aarch64
-          path: dist
+  # linux-aarch64: Disabled due to DuckDB cross-compilation issues
+  # TODO: Re-enable when native ARM runners or cross-compilation is fixed
+  # See: https://github.com/duckdb/duckdb/issues/... (DuckDB cross-compile)
 
   windows:
     runs-on: windows-latest
@@ -111,7 +96,7 @@ jobs:
     name: Release to PyPI
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
-    needs: [linux-x86_64, linux-aarch64, windows, macos, sdist]
+    needs: [linux-x86_64, windows, macos, sdist]
     environment:
       name: pypi
       url: https://pypi.org/p/ai-blame
