@@ -15,23 +15,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Build wheels
         uses: PyO3/maturin-action@v1.44.0
         with:
-          target: x86_64
           args: --release --out dist --find-interpreter
           sccache: 'true'
-          manylinux: auto
+          manylinux: 'off'  # Build natively, not in Docker container
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-x86_64
           path: dist
-
-  # linux-aarch64: Disabled due to DuckDB cross-compilation issues
-  # TODO: Re-enable when native ARM runners or cross-compilation is fixed
-  # See: https://github.com/duckdb/duckdb/issues/... (DuckDB cross-compile)
 
   windows:
     runs-on: windows-latest

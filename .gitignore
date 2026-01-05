@@ -1,3 +1,4 @@
+sync.just
 tests/output
 tests/*/*/output
 .idea
