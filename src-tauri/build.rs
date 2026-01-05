@@ -22,7 +22,9 @@ fn ensure_placeholder_icon() {
         let _ = fs::create_dir_all(parent);
     }
 
-    // 1x1 PNG (68 bytes).
+    // Minimal 1x1 transparent PNG (68 bytes) used as a placeholder icon.
+    // This is a temporary icon created during the build process.
+    // For production, replace with proper icons - see src-tauri/icons/README.md for icon setup.
     // Base64 source: iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMBAFhPqV8AAAAASUVORK5CYII=
     const PNG_1X1: &[u8] = &[
         137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4,

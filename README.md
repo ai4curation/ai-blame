@@ -28,6 +28,8 @@ Like `git blame`, but for AI-assisted edits. See which AI model wrote each line 
 
 The easiest way to install ai-blame is using Python package managers. No Rust toolchain required!
 
+> **Note:** This is a Rust CLI tool distributed via PyPI for convenience, not a Python library. It provides a binary-only package (no Python API bindings). For more details on the architecture, see the [Python API documentation](docs/tutorials/python-api.md).
+
 ```bash
 # Using uv (recommended)
 uv add --dev ai-blame
