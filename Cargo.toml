@@ -11,6 +11,24 @@ documentation = "https://github.com/ai4curation/ai-blame#readme"
 readme = "README.md"
 keywords = ["ai", "blame", "provenance", "claude", "git"]
 categories = ["command-line-utilities", "development-tools"]
+exclude = [
+    ".github/",
+    ".devcontainer/",
+    ".claude/",
+    "docs/",
+    "tests/",
+    "ui/",
+    "src-tauri/",
+    "*.md",
+    "!README.md",
+    "mkdocs.yml",
+    "pyproject.toml",
+    "*.cast",
+    "*.sh",
+    "*.just",
+    "Justfile",
+    "ai.just",
+]
 
 [workspace]
 members = [
