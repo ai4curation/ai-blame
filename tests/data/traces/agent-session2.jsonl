@@ -1,0 +1,3 @@
+{"uuid":"parent-a","message":{"model":"claude-test-agent"}}
+{"uuid":"child-a1","parentUuid":"parent-a","type":"user","timestamp":"2025-12-01T09:00:00Z","sessionId":"s2","version":"0.0.0-test","toolUseResult":{"filePath":"/repo/src/main.rs","structuredPatch":"@@ -2 +2 @@","oldString":"b","newString":"B"}}
+

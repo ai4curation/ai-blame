@@ -4,20 +4,17 @@ This tutorial walks you through using `ai-blame` to extract curation history fro
 
 ## Prerequisites
 
-- Python 3.10+
-- [uv](https://docs.astral.sh/uv/) package manager (recommended)
+- Rust (edition 2021) + Cargo
 - Claude Code installed and used on a project
 
 ## Installation
 
 ```bash
-# Install from PyPI
-uv pip install ai-blame
-
-# Or install from source
 git clone https://github.com/ai4curation/ai-blame
 cd ai-blame
-uv sync
+
+cargo build --release
+cargo install --path .
 ```
 
 ## Step 1: Check Your Traces
@@ -27,6 +24,22 @@ First, navigate to a project where you've used Claude Code:
 ```bash
 cd /path/to/your/project
 ```
+
+## Step 1.5: Create a starter config (recommended)
+
+If your project doesn't already have a `.ai-blame.yaml`, generate a starter config:
+
+```bash
+# Safe default: write provenance to sidecar files
+ai-blame init --flavor sidecar
+
+# Or: prefer in-place annotations when possible (YAML/JSON append; code/docs comment blocks)
+ai-blame init --flavor in-place
+```
+
+!!! warning "File writes"
+    `ai-blame init` writes **only** `.ai-blame.yaml`.  
+    `ai-blame annotate` will write to project files unless you pass `--dry-run`.
 
 Then check what traces are available:
 
@@ -51,10 +64,10 @@ Total successful edits: 47
 
 ## Step 2: Preview Changes (Dry Run)
 
-By default, `ai-blame` runs in dry-run mode, showing what would happen without modifying files:
+Use `report` to preview what would happen without modifying files:
 
 ```bash
-ai-blame mine
+ai-blame report
 ```
 
 This displays:
@@ -78,7 +91,7 @@ edit_history:
   action: CREATED
 ...
 
-[DRY RUN] No files modified. Use --apply to actually update files.
+No files modified. Use `ai-blame annotate` to write annotations/sidecars.
 ```
 
 ## Step 3: Filter the Results
@@ -86,20 +99,20 @@ edit_history:
 Often you'll want to reduce the verbosity. The `--initial-and-recent` flag keeps only the first and last edit per file:
 
 ```bash
-ai-blame mine --initial-and-recent
+ai-blame report --initial-and-recent
 ```
 
 You can also filter by file pattern:
 
 ```bash
 # Only YAML files
-ai-blame mine --pattern ".yaml"
+ai-blame report --pattern ".yaml"
 
 # Only files in a specific directory
-ai-blame mine --pattern "kb/"
+ai-blame report --pattern "kb/"
 
 # A specific file
-ai-blame mine config.yaml
+ai-blame report config.yaml
 ```
 
 ## Step 4: Apply Changes
@@ -107,7 +120,7 @@ ai-blame mine config.yaml
 Once you're happy with the preview, apply the changes:
 
 ```bash
-ai-blame mine --apply --initial-and-recent
+ai-blame annotate --initial-and-recent
 ```
 
 Output:
@@ -146,8 +159,29 @@ edit_history:
     action: EDITED
 ```
 
+## Bonus: Explore Your Sessions
+
+Before annotating, you can review the sessions and interactions that created the edits:
+
+```bash
+# List all sessions with models used
+ai-blame transcript list --columns SATMO
+
+# View a specific session (shows all messages and tool use)
+ai-blame transcript view <session-id>
+
+# Export a session as markdown for documentation
+ai-blame transcript view <session-id> --format markdown > session-notes.md
+```
+
+This is useful for understanding the context behind edits and learning how the AI approached the task. See [Transcripts & Subagents](../explanation/transcripts-and-subagents.md) for more details.
+
 ## Next Steps
 
 - Learn how to [configure output policies](../how-to/configuration.md) for different file types
-- Understand the [CLI reference](../reference/cli.md) for all available options
+- Explore [transcripts and subagents](../explanation/transcripts-and-subagents.md) to understand multi-agent sessions
+- Understand the [CLI reference](../reference/cli.md) for all available options and commands
 - Read about [how the extraction works](../explanation/how-it-works.md)
+- Check the [FAQs](../faqs.md) for answers to common questions
+
+

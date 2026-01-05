@@ -1,12 +1,95 @@
 # Python API
 
-This tutorial shows how to use `ai-blame` programmatically in Python scripts.
+!!! warning
+    The Rust version of ai-blame does **not** provide a Python API. It is a CLI-only tool distributed via PyPI for easy installation.
 
-## Basic Usage
+## Installation
 
-### Extracting Edit History
+The Rust version can be installed using Python package managers:
+
+```bash
+# Using pip
+pip install ai-blame
+
+# Using uv
+uv add --dev ai-blame
+
+# Using pipx (global install)
+pipx install ai-blame
+```
+
+This installs the `ai-blame` CLI binary. No Rust toolchain required!
+
+## Using the CLI from Python
+
+If you need to use ai-blame from Python scripts, you can call the CLI using subprocess:
 
 ```python
+import subprocess
+import json
+from pathlib import Path
+
+# Run ai-blame report and capture JSON output
+result = subprocess.run(
+    ["ai-blame", "report", "--format", "json"],
+    cwd="/path/to/project",
+    capture_output=True,
+    text=True,
+    check=True
+)
+
+# Parse the output
+report = json.loads(result.stdout)
+for file_info in report:
+    print(f"{file_info['path']}: {len(file_info['edits'])} edits")
+```
+
+### Running Other Commands
+
+```python
+import subprocess
+
+# Run annotate with error handling
+try:
+    subprocess.run(
+        ["ai-blame", "annotate", "--dry-run", "--pattern", "*.py"],
+        cwd="/path/to/project",
+        check=True
+    )
+except subprocess.CalledProcessError as e:
+    print(f"ai-blame command failed with exit code {e.returncode}")
+    # Handle the error appropriately
+
+# Run blame on a specific file
+try:
+    result = subprocess.run(
+        ["ai-blame", "blame", "myfile.py", "--blocks"],
+        cwd="/path/to/project",
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    print(result.stdout)
+except subprocess.CalledProcessError as e:
+    print(f"Command failed: {e.stderr}")
+except FileNotFoundError:
+    print("ai-blame not found. Make sure it's installed: pip install ai-blame")
+```
+
+## Need a Python API?
+
+If you have a use case that requires a proper Python API (beyond calling the CLI), please [open an issue](https://github.com/ai4curation/ai-blame/issues) describing your needs. We can consider adding PyO3 bindings if there's sufficient demand.
+
+## Python Version (Deprecated)
+
+The original Python implementation with a Python API is at [`ai4curation/ai-blame`](https://github.com/ai4curation/ai-blame). See the [migration guide](../../MIGRATION.md) for more information.
+
+### Old Python API (for reference)
+
+This API is from the deprecated Python version and is **not available** in the Rust version:
+
+```python
+# This ONLY works with the old Python version
 from pathlib import Path
 from ai_blame.extractor import extract_edit_history, convert_to_file_histories
 from ai_blame.models import FilterConfig
@@ -23,194 +106,4 @@ for file_path, edits in edits_by_file.items():
     print(f"{file_path}: {len(edits)} edits")
 ```
 
-### Filtering Results
 
-```python
-from datetime import datetime, timezone
-
-# Filter by file pattern
-config = FilterConfig(file_pattern=".yaml")
-
-# Filter by time range
-config = FilterConfig(
-    since=datetime(2025, 12, 1, tzinfo=timezone.utc),
-    until=datetime(2025, 12, 15, tzinfo=timezone.utc),
-)
-
-# Keep only first and last edit per file
-config = FilterConfig(initial_and_recent_only=True)
-
-# Skip small edits
-config = FilterConfig(min_change_size=100)
-```
-
-### Converting to File Histories
-
-```python
-from ai_blame.extractor import convert_to_file_histories, apply_filters
-
-# Apply post-extraction filters
-config = FilterConfig(initial_and_recent_only=True)
-filtered_edits = apply_filters(edits_by_file, config)
-
-# Convert to FileHistory objects
-histories = convert_to_file_histories(filtered_edits)
-
-for path, history in histories.items():
-    print(f"\n{path}:")
-    for event in history.events:
-        print(f"  {event.timestamp}: {event.action} by {event.model}")
-```
-
-## Working with Configuration
-
-### Loading Config Files
-
-```python
-from ai_blame.config import find_config, load_config, get_default_config
-
-# Auto-find .ai-blame.yaml
-config_path = find_config()
-if config_path:
-    output_config = load_config(config_path)
-else:
-    output_config = get_default_config()
-
-# Get rule for a specific file
-rule = output_config.get_rule_for_file("src/main.py")
-print(f"Policy: {rule.policy}")  # e.g., OutputPolicy.SIDECAR
-```
-
-### Creating Config Programmatically
-
-```python
-from ai_blame.models import OutputConfig, FileRule, OutputPolicy
-
-config = OutputConfig(
-    defaults=FileRule(
-        pattern="*",
-        policy=OutputPolicy.SIDECAR,
-        sidecar_pattern="{stem}.history.yaml",
-    ),
-    rules=[
-        FileRule(pattern="*.yaml", policy=OutputPolicy.APPEND),
-        FileRule(pattern="*.json", policy=OutputPolicy.APPEND, format="json"),
-        FileRule(pattern="*.py", policy=OutputPolicy.COMMENT, comment_syntax="hash"),
-    ],
-)
-```
-
-## Updating Files
-
-### Append to YAML
-
-```python
-from ai_blame.updater import append_yaml
-
-success, result = append_yaml(
-    file_path=Path("config.yaml"),
-    history=history,
-    dry_run=False,  # Set to True to preview
-)
-```
-
-### Write Sidecar Files
-
-```python
-from ai_blame.updater import write_sidecar
-
-success, result = write_sidecar(
-    file_path=Path("src/main.py"),
-    history=history,
-    sidecar_pattern="{stem}.history.yaml",
-    dry_run=False,
-)
-# Creates: src/main.history.yaml
-```
-
-### Embed as Comments
-
-```python
-from ai_blame.updater import write_comment
-from ai_blame.models import CommentSyntax
-
-success, result = write_comment(
-    file_path=Path("script.py"),
-    history=history,
-    syntax=CommentSyntax.HASH,
-    dry_run=False,
-)
-```
-
-### Apply Rules Automatically
-
-```python
-from ai_blame.updater import apply_rule
-
-# Get the rule for this file type
-rule = output_config.get_rule_for_file("data.json")
-
-# Apply it
-success, msg = apply_rule(
-    file_path=Path("data.json"),
-    history=history,
-    rule=rule,
-    dry_run=False,
-)
-```
-
-## Complete Example
-
-```python
-"""Extract and apply curation history to all YAML files in a project."""
-
-from pathlib import Path
-from ai_blame.extractor import (
-    extract_edit_history,
-    apply_filters,
-    convert_to_file_histories,
-)
-from ai_blame.config import get_default_config
-from ai_blame.models import FilterConfig
-from ai_blame.updater import apply_rule
-
-
-def main():
-    # Configuration
-    trace_dir = Path.home() / ".claude" / "projects" / "-Users-me-my-project"
-
-    # Extract edits
-    filter_config = FilterConfig(
-        file_pattern=".yaml",
-        initial_and_recent_only=True,
-    )
-
-    edits = extract_edit_history(trace_dir, filter_config)
-    edits = apply_filters(edits, filter_config)
-    histories = convert_to_file_histories(edits)
-
-    # Get output config
-    output_config = get_default_config()
-
-    # Apply to each file
-    for rel_path, history in histories.items():
-        file_path = Path.cwd() / rel_path
-        if not file_path.exists():
-            print(f"Skipping (not found): {rel_path}")
-            continue
-
-        rule = output_config.get_rule_for_file(rel_path)
-        if rule is None:
-            continue
-
-        success, msg = apply_rule(file_path, history, rule, dry_run=False)
-        print(msg)
-
-
-if __name__ == "__main__":
-    main()
-```
-
-## Data Models Reference
-
-See the [Data Models Reference](../reference/models.md) for complete documentation of all classes.

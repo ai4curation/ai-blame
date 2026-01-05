@@ -1,0 +1,4 @@
+{"uuid":"parent-1","message":{"model":"claude-test-model"}}
+{"uuid":"child-1","parentUuid":"parent-1","type":"user","timestamp":"2025-12-01T08:03:42Z","sessionId":"s1","version":"0.0.0-test","toolUseResult":{"filePath":"/repo/src/main.rs","structuredPatch":"@@ -1 +1 @@","oldString":"a","newString":"b"}}
+{"uuid":"child-2","parentUuid":"parent-1","type":"user","timestamp":"2025-12-01T08:05:00Z","sessionId":"s1","version":"0.0.0-test","toolUseResult":{"type":"create","filePath":"/repo/src/lib.rs","content":"pub fn hello() {}\n"}}
+

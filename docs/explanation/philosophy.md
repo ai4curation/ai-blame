@@ -56,7 +56,7 @@ This provides:
 
 Different file types need different approaches:
 
-- **Structured data** (YAML, JSON) — Append a `edit_history` key
+- **Structured data** (YAML, JSON) — Append an `edit_history` key
 - **Code files** — Use sidecar files or embedded comments
 - **Documentation** — Often best skipped
 
@@ -70,81 +70,13 @@ The tool never modifies files unless explicitly told to. This lets you preview c
 
 With `--initial-and-recent`, you can keep only the first and last edit, avoiding bloated history sections while preserving the essential provenance information.
 
-## Use Cases
+## Read More
 
-### Knowledge Base Curation
+For a deeper dive into the motivation and real-world use cases, see:
 
-For projects like disease ontologies or gene annotations where AI agents assist curators:
+**["Whose Code Is This, Anyway? Tracking AI Agent Provenance"](https://medium.com/@cmungall/whose-code-is-this-anyway-tracking-ai-agent-provenance-4c9cef3c38eb)** on Medium
 
-```yaml
-# kb/diseases/Asthma.yaml
-name: Asthma
-synonyms:
-  - Bronchial asthma
-  - Hyperreactive airway disease
+This article explores why provenance tracking matters for knowledge bases, code auditing, model comparison, and regulatory compliance—and includes examples of how ai-blame solves the "git blame won't tell you anymore" problem.
 
-edit_history:
-  - timestamp: "2025-12-01T08:03:42+00:00"
-    model: claude-opus-4-5-20251101
-    action: CREATED
-  - timestamp: "2025-12-15T20:34:29+00:00"
-    model: claude-opus-4-5-20251101
-    action: EDITED
-```
 
-### AI-Generated Code
 
-Track which parts of your codebase were AI-generated:
-
-```python
-# utils.py
-
-def calculate_statistics(data):
-    """Calculate basic statistics for a dataset."""
-    ...
-
-# --- edit_history ---
-# - timestamp: '2025-12-01T08:03:42+00:00'
-#   model: claude-opus-4-5-20251101
-#   action: CREATED
-# --- end edit_history ---
-```
-
-### Documentation
-
-Use sidecar files to track AI involvement without cluttering docs:
-
-```
-docs/
-├── guide.md
-├── guide.history.yaml
-├── reference.md
-└── reference.history.yaml
-```
-
-## Relationship to Version Control
-
-`ai-blame` complements git, it doesn't replace it:
-
-| Aspect | Git | ai-blame |
-|--------|-----|----------|
-| **Tracks** | File changes | AI agent involvement |
-| **Granularity** | Commits | Individual tool operations |
-| **Attribution** | Committer | AI model + version |
-| **Storage** | `.git/` history | Embedded in files |
-
-The combination provides complete traceability:
-
-1. **git** — Who approved the change and when it was committed
-2. **ai-blame** — Which AI model made the change and how
-
-## Future Directions
-
-- **Multi-agent support** — OpenAI Codex is planned; PRs welcome for other agents
-- **Semantic diff** — Capture *what* changed, not just *that* it changed
-- **Verification** — Cryptographic signatures for provenance data
-- **Integration** — Hooks for CI/CD pipelines and documentation systems
-
-## Background
-
-This project originated from discussions about AI-assisted curation workflows. See the original issue for context: [ai4curation/aidocs#62](https://github.com/ai4curation/aidocs/issues/62)

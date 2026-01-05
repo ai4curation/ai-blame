@@ -139,3 +139,14 @@ dmypy.json
 .idea
 # Local vscode editor config
 .vscode
+.playwright-mcp
+/target
+/site
+/.venv
+/venv
+__pycache__/
+.DS_Store
+*.whl
+dist/
+*.egg-info/
+.ai-blame.ddb

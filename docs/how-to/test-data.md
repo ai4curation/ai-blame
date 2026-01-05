@@ -36,19 +36,7 @@ The trace directory is computed as:
 $home/.claude/projects/<encoded-dir>/
 ```
 
-Where `<encoded-dir>` is the directory path with `/` replaced by `-`.
-
-**Example:**
-
-```bash
-ai-blame stats --dir /Users/alice/myproject --home /Users/alice
-```
-
-Looks for traces in:
-
-```
-/Users/alice/.claude/projects/-Users-alice-myproject/
-```
+Where `<encoded-dir>` is a filesystem-safe encoding of the absolute path (path separators become `-`, and punctuation like `.` may also be normalized to `-`).
 
 ## Testing with Sample Data
 
@@ -73,6 +61,7 @@ tests/data/
 !!! note
     The encoded folder name must match the absolute path of your test data directory.
 
+
 ### Running Against Test Data
 
 ```bash
@@ -85,30 +74,56 @@ ai-blame stats \
   --home /Users/me/project/tests/data
 ```
 
-### In Tests
+### Repo-local fixtures (recommended for reproducible tests)
 
-```python
-import pytest
-from pathlib import Path
-from typer.testing import CliRunner
-from ai_blame.cli import app
+If you keep synthetic/redacted fixture traces in the repo (for example under
+`tests/data/traces/`), prefer `--trace-dir` directly. This avoids the
+`<encoded-dir>` naming requirement (which depends on absolute paths and varies
+across machines):
 
-runner = CliRunner()
-
-TEST_DATA = Path(__file__).parent / "data"
-
-def test_stats_with_test_data():
-    result = runner.invoke(
-        app,
-        [
-            "stats",
-            "--dir", str(TEST_DATA.resolve()),
-            "--home", str(TEST_DATA),
-        ],
-    )
-    assert result.exit_code == 0
-    assert "Trace files:" in result.output
+```bash
+ai-blame stats --trace-dir tests/data/traces
+ai-blame report --trace-dir tests/data/traces --pattern "src/main.rs"
 ```
+
+### Repo-local example project + fixture home (good for manual CLI testing)
+
+This repository also includes a small example project plus a matching “fixture home”
+that contains trace JSONLs under a `.claude/projects/<encoded-path>/` directory.
+This is useful when you want to test the real CLI path resolution logic (`--home`)
+without relying on your actual `~/.claude`.
+
+Layout:
+
+```
+tests/examples/
+├── simple/                # Example project files
+└── simple-home/           # Fixture HOME directory (contains .claude/)
+    └── .claude/
+        └── projects/
+            └── <encoded-path-for-tests/examples/simple>/
+                ├── <session>.jsonl
+                ├── agent-<...>.jsonl
+                └── ...
+```
+
+Run it:
+
+```bash
+cd tests/examples/simple
+
+ai-blame stats --home ../simple-home
+ai-blame blame main.py --home ../simple-home
+ai-blame blame main.py --home ../simple-home --show-agent
+ai-blame blame main.py --home ../simple-home --blocks --show-agent
+```
+
+If you need to recreate/update this fixture from a local project, you generally:
+
+- Copy project files into `tests/examples/simple/`
+- Copy matching `~/.claude/projects/<encoded-project>/` JSONLs into
+  `tests/examples/simple-home/.claude/projects/<encoded-simple>/`
+- Rewrite `toolUseResult.filePath` entries so they point at the repo-local example path
 
 ## Using `--trace-dir` Directly
 
@@ -120,40 +135,4 @@ ai-blame stats --trace-dir ~/.claude/projects/-Users-alice-other-project/
 
 This overrides `--dir` and `--home`.
 
-## Priority Order
 
-1. `--trace-dir` — Use this exact path
-2. `--dir` + `--home` — Compute `$home/.claude/projects/<encoded-dir>/`
-3. Default — Use `~/.claude/projects/<encoded-cwd>/`
-
-## Rewriting Trace Paths
-
-When copying traces between machines, file paths in the traces won't match. For testing, you may need to rewrite paths in the JSONL files:
-
-```python
-def rewrite_trace_file(src: Path, dest: Path, old_path: str, new_path: str):
-    """Rewrite a JSONL trace file, replacing path references."""
-    with open(src) as f:
-        content = f.read()
-    content = content.replace(old_path, new_path)
-    with open(dest, "w") as f:
-        f.write(content)
-```
-
-This is what the test suite does to make traces portable across different machines.
-
-## Example: CI/CD Testing
-
-```yaml
-# .github/workflows/test.yml
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Test ai-blame
-        run: |
-          # Run against bundled test data
-          ai-blame stats --dir tests/data --home tests/data
-```

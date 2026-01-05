@@ -1,110 +1,32 @@
-# ============ Hint for for Windows Users ============
+set shell := ["bash", "-euo", "pipefail", "-c"]
 
-# On Windows the "sh" shell that comes with Git for Windows should be used.
-# If it is not on path, provide the path to the executable in the following line.
-#set windows-shell := ["C:/Program Files/Git/usr/bin/sh", "-cu"]
+# Show available recipes
+default:
+  @just --list
 
-# ============ Variables used in recipes ============
+# Check: formatting, build warnings, lints (no test execution)
+check:
+  cargo fmt --all -- --check
+  RUSTFLAGS="-D warnings" cargo build --workspace
+  cargo clippy --workspace --all-targets -- -D warnings
 
-# Set shebang line for cross-platform Python recipes (assumes presence of launcher on Windows)
-shebang := if os() == 'windows' {
-  'py'
-} else {
-  '/usr/bin/env python3'
-}
+# Run all checks (format, build, lint) and tests
+test: check
+  cargo test --workspace
 
+# Build debug + release for the whole workspace
+build:
+  cargo build --workspace
+  cargo build --workspace --release
 
-# ============== Project recipes ==============
-
-# List all commands as default command. The prefix "_" hides the command.
-_default: _status
-    @just --list
-
-# Initialize a new project (use this for projects not yet under version control)
-[group('project management')]
-setup: _git-init _ai-instructions install _git-add
-  git commit -m "Initialise git with minimal project" -a
-
-  
-# Install project dependencies
-[group('project management')]
+# Install the main CLI locally (from the workspace root)
 install:
-  uv sync --group dev
+  cargo install --path . --locked
+
+ui:
+  cargo run -p ai-blame-ui
+
+# Everything (check, test, build)
+all: check test build
 
 
-# Run all tests
-[group('model development')]
-test: pytest doctest mypy format
-
-test-full: test pytest-integration
-
-pytest:
-  uv run pytest
-
-# include integration tests
-pytest-integration:
-	$(RUN) pytest -m ""
-
-doctest:
-  uv run pytest  --doctest-modules src
-
-mypy:
-  uv run mypy src tests
-
-format:
-	uv run ruff check .
-
-# ============== Hidden internal recipes ==============
-
-_status:
-  @echo "OK"
-
-# Update project template
-_update-template:
-  copier update --trust --skip-answered
-
-
-# Run documentation server
-_serve:
-  uv run mkdocs serve
-
-# Initialize git repository
-_git-init:
-  git init
-
-# Add files to git
-_git-add:
-  git add .
-
-# Commit files to git
-_git-commit:
-  git commit -m 'chore: just setup was run' -a
-
-# Show git status
-_git-status:
-  git status
-
-goosehints:
-  [ -f .goosehints ] || ln -s CLAUDE.md .goosehints
-
-copilot-instructions:
-  [ -f .github/copilot-instructions.md ] || cd .github && ln -s ../CLAUDE.md copilot-instructions.md
-
-_ai-instructions: goosehints copilot-instructions
-
-gh-add-topics:
-  gh repo edit --add-topic "ai-blame,monarchinitiative,linkml"
-
-gh-add-secrets:
-  gh secret set PAT_FOR_PR --body "$PAT_FOR_PR"
-  gh secret set ANTHROPIC_API_KEY --body "$ANTHROPIC_API_KEY"
-  gh secret set OPENAI_API_KEY --body "$OPENAI_API_KEY"
-  gh secret set CBORG_API_KEY --body "$CBORG_API_KEY"
-  gh secret set CLAUDE_CODE_OATH_TOKEN --body "$CLAUDE_CODE_OATH_TOKEN"
-
-gh-invite-the-dragon:
-  gh api repos/bbop-skills/ai-blame/collaborators/dragon-ai-agent -X PUT -f permission=push
-
-# ============== Include project-specific recipes ==============
-
-import "project.justfile"

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Blame</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="logo.png" alt="AI Blame logo" class="brand-mark">
+          <div class="brand-text">
+            <p class="brand-title">AI Blame</p>
+          </div>
+        </div>
+
+        <div class="project-info">
+          <p class="eyebrow">Project</p>
+          <p class="project-name" id="project-name" title="Click to change">Click to open project</p>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item is-active" data-view="blame">Blame Viewer</button>
+          <button class="nav-item" data-view="timeline">Timeline</button>
+          <button class="nav-item" data-view="transcripts">Transcripts</button>
+          <button class="nav-item" data-view="settings">Settings</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p class="muted" id="sidebar-status">Ready</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="header">
+          <div class="header-left">
+            <h1 id="view-title">Blame Viewer</h1>
+          </div>
+          <div class="header-actions">
+            <button class="ghost" data-action="open-project">📁 Open Project</button>
+            <button class="primary" data-action="refresh-traces">⟳ Refresh</button>
+          </div>
+        </header>
+
+        <section class="content">
+          <!-- BLAME VIEW -->
+          <div class="view is-visible" data-view="blame">
+            <div class="panel">
+              <div class="panel-body">
+                <div class="blame-controls">
+                  <input type="text" id="file-search" placeholder="Search files..." class="file-search" />
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="agent-touched-only" checked />
+                    <span>AI-touched only</span>
+                  </label>
+                </div>
+                <div class="blame-layout">
+                  <div class="blame-files">
+                    <p class="eyebrow">Files</p>
+                    <ul id="blame-file-list"></ul>
+                  </div>
+                  <div class="blame-code">
+                    <p class="eyebrow">Preview</p>
+                    <div class="code-block" id="blame-code-block"></div>
+                  </div>
+                </div>
+                <div class="blame-details" id="blame-details-panel">
+                  <div class="blame-details-header">
+                    <p class="eyebrow">Details</p>
+                    <button class="ghost-small" id="close-details">×</button>
+                  </div>
+                  <h3 id="blame-detail-title">Select a line</h3>
+                  <p id="blame-detail-model">Model: —</p>
+                  <p id="blame-detail-timestamp">Timestamp: —</p>
+                  <p class="muted" id="blame-detail-trace">Session: —</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TIMELINE VIEW -->
+          <div class="view" data-view="timeline">
+            <div class="panel">
+              <div class="panel-body">
+                <div class="timeline-controls">
+                  <input type="number" id="timeline-limit" placeholder="Limit entries" value="50" min="1" max="500" class="timeline-input" />
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="timeline-filter-codex" />
+                    <span>Skip Codex</span>
+                  </label>
+                </div>
+                <div class="timeline-container">
+                  <table class="timeline-table" id="timeline-table">
+                    <thead>
+                      <tr>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>File</th>
+                        <th>Model</th>
+                        <th>Agent</th>
+                      </tr>
+                    </thead>
+                    <tbody id="timeline-body">
+                      <tr><td colspan="5" class="muted">Loading timeline...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TRANSCRIPTS VIEW -->
+          <div class="view" data-view="transcripts">
+            <div class="panel">
+              <div class="panel-body">
+                <div class="transcript-layout">
+                  <div class="transcript-list-container">
+                    <p class="eyebrow">Sessions</p>
+                    <input type="text" id="transcript-list-search" placeholder="Search all transcripts…" class="transcript-list-search" />
+                    <div id="transcript-search-info" class="transcript-search-info"></div>
+                    <ul id="transcript-list" class="transcript-list"></ul>
+                  </div>
+                  <div class="transcript-viewer-container">
+                    <div class="transcript-header" id="transcript-header">
+                      <p class="eyebrow">Transcript</p>
+                      <div class="transcript-meta">
+                        <p id="transcript-meta-session">Select a session to view</p>
+                        <p class="muted" id="transcript-meta-agent"></p>
+                        <p class="muted" id="transcript-meta-time"></p>
+                      </div>
+                      <input type="text" id="transcript-search" placeholder="Search content…" class="transcript-search" />
+                    </div>
+                    <div id="transcript-messages" class="transcript-messages">
+                      <div class="transcript-empty">
+                        <p class="muted">Select a transcript session from the list to view the conversation.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SETTINGS VIEW -->
+          <div class="view" data-view="settings">
+            <div class="panel">
+              <div class="panel-body">
+                <div class="settings-grid">
+                  <div class="card">
+                    <h3>General</h3>
+                    <label>
+                      Project Path
+                      <input id="project-path" type="text" placeholder="Select a project..." />
+                    </label>
+                    <label>
+                      Home Directory
+                      <input id="home-directory" type="text" placeholder="~/.claude" />
+                      <p class="help-text">Used to locate trace files (e.g., ~/.claude). Leave blank to use system home.</p>
+                    </label>
+                  </div>
+                  <div class="card">
+                    <h3>Cache</h3>
+                    <label>
+                      <input type="checkbox" id="cache-enabled" checked />
+                      <span>Enable DuckDB caching</span>
+                    </label>
+                    <button class="ghost" data-action="clear-cache">Clear Cache</button>
+                  </div>
+                </div>
+                <button class="primary" data-action="save-config" style="margin-top: 16px;">Save Settings</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="status-bar">
+          <span class="dot"></span>
+          <span id="status-text">Ready</span>
+        </footer>
+      </main>
+    </div>
+
+    <!-- PROJECT PICKER MODAL -->
+    <div class="project-picker" id="project-picker" role="dialog" aria-hidden="true" aria-labelledby="picker-title">
+      <div class="picker-surface">
+        <div class="picker-header">
+          <div>
+            <h3 id="picker-title">Open Project</h3>
+            <p class="muted">Select a project directory or enter a path.</p>
+          </div>
+          <button class="ghost" id="picker-close" aria-label="Close">×</button>
+        </div>
+        <div class="picker-body">
+          <div class="picker-search">
+            <input
+              id="picker-search"
+              type="search"
+              placeholder="Search recent or type a path…"
+              autocomplete="off"
+              aria-label="Search projects"
+            />
+            <button class="ghost" data-action="picker-system">📂 Browse</button>
+          </div>
+          <div class="picker-grid" id="picker-list"></div>
+          <div class="picker-footer">
+            <input
+              id="picker-manual"
+              type="text"
+              placeholder="/path/to/project"
+              autocomplete="off"
+              aria-label="Enter project path"
+            />
+            <button class="primary" data-action="picker-apply">Open</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

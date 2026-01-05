@@ -1,10 +1,11 @@
 ---
 site_name: "ai-blame"
-site_description: "Extract provenance from AI agent execution traces"
+site_description: "Extract provenance from AI agent execution traces (Rust port)"
+
 theme:
   name: material
   logo: assets/ai-blame-logo.png
-  favicon: assets/ai-blame-logo.png
+  favicon: assets/favicon.svg
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -29,8 +30,6 @@ theme:
 
 plugins:
   - search
-  - mermaid2:
-      version: 11.4.1
 
 markdown_extensions:
   - admonition
@@ -55,24 +54,43 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Tutorials:
+      - Quickstart: tutorials/quickstart.md
       - Getting Started: tutorials/getting-started.md
       - Python API: tutorials/python-api.md
   - How-To Guides:
       - Configure Output Policies: how-to/configuration.md
+      - Custom Column Layouts: how-to/column-layouts.md
       - Handle Different File Types: how-to/file-types.md
+      - Shell Completions: how-to/shell-completions.md
       - Work with Test Data: how-to/test-data.md
+      - Performance and Caching: how-to/performance-and-caching.md
+      - Desktop App: how-to/tauri-app.md
   - Reference:
-      - CLI Reference: reference/cli.md
+      - Command Index: reference/index.md
+      - Setup & Configuration: reference/setup.md
+      - Provenance Annotation: reference/annotation.md
+      - Trace Exploration: reference/exploration.md
+      - Line-Level Analysis: reference/blame-analysis.md
+      - Performance: reference/performance.md
+      - CLI Syntax Reference: reference/cli.md
       - Configuration File: reference/config-file.md
       - Data Models: reference/models.md
   - Explanation:
       - Philosophy: explanation/philosophy.md
       - How It Works: explanation/how-it-works.md
+      - Understanding Subagents: explanation/transcripts-and-subagents.md
       - Trace Format: explanation/trace-format.md
+      - Claude Traces: explanation/claude-traces.md
+      - Codex Traces: explanation/codex-traces.md
       - Related Tools: explanation/related-tools.md
+  - FAQs: faqs.md
+  - About: about.md
 
 exclude_docs: |
   /templates-linkml/
 
-site_url: https://ai4curation.github.io/ai-blame
 repo_url: https://github.com/ai4curation/ai-blame
+repo_name: ai4curation/ai-blame
+
+
+

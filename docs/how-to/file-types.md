@@ -83,6 +83,7 @@ For code files, you have two options: sidecar files or embedded comments.
     ```
 
     Embeds at end of file:
+
     ```python
     # --- edit_history ---
     # - timestamp: '2025-12-01T08:03:42+00:00'
@@ -166,107 +167,17 @@ rules:
 rules:
   - pattern: "*.lock"
     policy: skip
-  - pattern: "uv.lock"
-    policy: skip
   - pattern: "package-lock.json"
     policy: skip
 ```
 
-### Track Project Configs
+---
 
-```yaml
-rules:
-  - pattern: "pyproject.toml"
-    policy: sidecar
-  - pattern: "package.json"
-    policy: append
-    format: json
-```
+## Related Topics
 
-## Complete Example
+- **[Setup & Configuration](../reference/setup.md)** — How to initialize and configure `.ai-blame.yaml`
+- **[Configuration Guide](configuration.md)** — Detailed configuration options
+- **[Provenance Annotation](../reference/annotation.md)** — How different output policies work
+- **[CLI Reference](../reference/cli.md)** — Command syntax for all commands
 
-Here's a comprehensive configuration for a typical Python project:
 
-```yaml
-# .ai-blame.yaml
-
-defaults:
-  policy: sidecar
-  sidecar_pattern: "{stem}.history.yaml"
-
-rules:
-  # Structured data - append directly
-  - pattern: "*.yaml"
-    policy: append
-  - pattern: "*.yml"
-    policy: append
-  - pattern: "*.json"
-    policy: append
-    format: json
-
-  # Skip documentation and tests
-  - pattern: "*.md"
-    policy: skip
-  - pattern: "docs/**"
-    policy: skip
-  - pattern: "tests/**"
-    policy: skip
-
-  # Skip generated files
-  - pattern: "*.lock"
-    policy: skip
-  - pattern: ".gitignore"
-    policy: skip
-
-  # Python code - use sidecar (falls through to default)
-  # - pattern: "*.py"
-  #   policy: sidecar  # Uses default
-```
-
-## Organizing Sidecar Files
-
-### Same Directory (Default)
-
-```yaml
-sidecar_pattern: "{stem}.history.yaml"
-```
-
-```
-src/
-├── main.py
-├── main.history.yaml
-├── utils.py
-└── utils.history.yaml
-```
-
-### Hidden Files
-
-```yaml
-sidecar_pattern: ".{stem}.history.yaml"
-```
-
-```
-src/
-├── main.py
-├── .main.history.yaml
-├── utils.py
-└── .utils.history.yaml
-```
-
-### Separate Directory
-
-```yaml
-sidecar_pattern: ".history/{name}.yaml"
-```
-
-```
-src/
-├── main.py
-├── utils.py
-└── .history/
-    ├── main.py.yaml
-    └── utils.py.yaml
-```
-
-!!! tip
-    Using a separate `.history/` directory keeps your source tree clean and makes it easy to `.gitignore` or include history files as needed.

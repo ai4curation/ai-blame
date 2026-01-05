@@ -1,0 +1,10 @@
+{
+  "name": "test-data",
+  "count": 100,
+  "active": true,
+  "tags": ["alpha", "beta", "gamma"],
+  "metadata": {
+    "created": "2025-01-01",
+    "author": "test"
+  }
+}
