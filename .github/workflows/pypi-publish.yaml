@@ -15,15 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Build wheels
         uses: PyO3/maturin-action@v1.44.0
         with:
+          target: x86_64
           args: --release --out dist --find-interpreter
           sccache: 'true'
-          manylinux: 'off'  # Build natively, not in Docker container
+          manylinux: '2_28'  # Newer manylinux with better tooling for DuckDB
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
