@@ -44,7 +44,7 @@ dependencies = [
 
 [[package]]
 name = "ai-blame"
-version = "0.5.1"
+version = "0.5.3"
 dependencies = [
  "anyhow",
  "chrono",
@@ -63,7 +63,7 @@ dependencies = [
 
 [[package]]
 name = "ai-blame-ui"
-version = "0.1.0"
+version = "0.5.3"
 dependencies = [
  "ai-blame",
  "dirs",

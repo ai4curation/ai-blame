@@ -96,7 +96,7 @@ jobs:
     if: github.event_name == 'release'
     needs: [linux-x86_64, windows, macos, sdist]
     environment:
-      name: pypi
+      name: release
       url: https://pypi.org/p/ai-blame
     permissions:
       # Override global permissions for this job to enable trusted publishing

@@ -4,7 +4,6 @@ build-backend = "maturin"
 
 [project]
 name = "ai-blame"
-version = "0.1.0"
 description = "Extract provenance from AI agent execution traces - like git blame, but for AI-assisted edits"
 readme = "README.md"
 requires-python = ">=3.9"

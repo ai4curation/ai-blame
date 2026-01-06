@@ -4,6 +4,10 @@
 
 # ai-blame
 
+[![Crates.io](https://img.shields.io/crates/v/ai-blame.svg)](https://crates.io/crates/ai-blame)
+[![PyPI](https://img.shields.io/pypi/v/ai-blame.svg)](https://pypi.org/project/ai-blame/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://ai4curation.github.io/ai-blame)
+
 **Extract provenance from AI agent execution traces.**
 
 Like `git blame`, but for AI-assisted edits. See which AI model wrote each line of code.

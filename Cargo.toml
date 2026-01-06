@@ -1,6 +1,6 @@
 [package]
 name = "ai-blame"
-version = "0.5.1"
+version = "0.5.3"
 edition = "2021"
 authors = ["Chris Mungall"]
 description = "Extract provenance from AI agent execution traces - like git blame, but for AI-assisted edits"
@@ -40,7 +40,7 @@ default-members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.5.3"
 edition = "2021"
 authors = ["Chris Mungall"]
 license = "BSD-3-Clause"

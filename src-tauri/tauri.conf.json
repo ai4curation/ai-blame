@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "AI Blame",
-    "version": "0.1.0"
+    "version": "0.5.3"
   },
   "tauri": {
     "bundle": {
