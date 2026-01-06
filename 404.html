@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Extract provenance from AI agent execution traces">
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
       
       
       
@@ -16,7 +16,7 @@
         
       
       
-      <link rel="icon" href="/ai-blame/assets/ai-blame-logo.png">
+      <link rel="icon" href="/assets/favicon.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
@@ -25,10 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="/ai-blame/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="/assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/ai-blame/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="/assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +47,7 @@
       
     
     
-    <script>__md_scope=new URL("/ai-blame/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -83,9 +83,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/ai-blame/." title="ai-blame" class="md-header__button md-logo" aria-label="ai-blame" data-md-component="logo">
+    <a href="/." title="ai-blame" class="md-header__button md-logo" aria-label="ai-blame" data-md-component="logo">
       
-  <img src="/ai-blame/assets/ai-blame-logo.png" alt="logo">
+  <img src="/assets/ai-blame-logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -188,7 +188,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
       </div>
@@ -218,9 +218,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/ai-blame/." title="ai-blame" class="md-nav__button md-logo" aria-label="ai-blame" data-md-component="logo">
+    <a href="/." title="ai-blame" class="md-nav__button md-logo" aria-label="ai-blame" data-md-component="logo">
       
-  <img src="/ai-blame/assets/ai-blame-logo.png" alt="logo">
+  <img src="/assets/ai-blame-logo.png" alt="logo">
 
     </a>
     ai-blame
@@ -233,7 +233,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
     </div>
@@ -247,7 +247,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/." class="md-nav__link">
+      <a href="/." class="md-nav__link">
         
   
   
@@ -328,7 +328,35 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/tutorials/getting-started/" class="md-nav__link">
+      <a href="/tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/tutorials/getting-started/" class="md-nav__link">
         
   
   
@@ -356,7 +384,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/tutorials/python-api/" class="md-nav__link">
+      <a href="/tutorials/python-api/" class="md-nav__link">
         
   
   
@@ -445,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/how-to/configuration/" class="md-nav__link">
+      <a href="/how-to/configuration/" class="md-nav__link">
         
   
   
@@ -473,7 +501,35 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/how-to/file-types/" class="md-nav__link">
+      <a href="/how-to/column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/how-to/file-types/" class="md-nav__link">
         
   
   
@@ -501,7 +557,35 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/how-to/test-data/" class="md-nav__link">
+      <a href="/how-to/shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/how-to/test-data/" class="md-nav__link">
         
   
   
@@ -509,6 +593,62 @@
     
   
     Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/how-to/performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/how-to/tauri-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
   
 
     
@@ -590,14 +730,14 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/reference/cli/" class="md-nav__link">
+      <a href="/reference/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    Command Index
   
 
     
@@ -618,7 +758,175 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/reference/config-file/" class="md-nav__link">
+      <a href="/reference/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/reference/annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/reference/exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/reference/blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/reference/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/reference/config-file/" class="md-nav__link">
         
   
   
@@ -646,7 +954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/reference/models/" class="md-nav__link">
+      <a href="/reference/models/" class="md-nav__link">
         
   
   
@@ -735,7 +1043,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/explanation/philosophy/" class="md-nav__link">
+      <a href="/explanation/philosophy/" class="md-nav__link">
         
   
   
@@ -763,7 +1071,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/explanation/how-it-works/" class="md-nav__link">
+      <a href="/explanation/how-it-works/" class="md-nav__link">
         
   
   
@@ -791,7 +1099,35 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/explanation/trace-format/" class="md-nav__link">
+      <a href="/explanation/transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/explanation/trace-format/" class="md-nav__link">
         
   
   
@@ -819,7 +1155,63 @@
   
   
     <li class="md-nav__item">
-      <a href="/ai-blame/explanation/related-tools/" class="md-nav__link">
+      <a href="/explanation/claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/explanation/codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/explanation/related-tools/" class="md-nav__link">
         
   
   
@@ -843,6 +1235,60 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/faqs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -916,10 +1362,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/ai-blame/", "features": ["content.tabs.link", "content.code.copy", "navigation.sections", "navigation.expand", "toc.follow"], "search": "/ai-blame/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "/", "features": ["content.tabs.link", "content.code.copy", "navigation.sections", "navigation.expand", "toc.follow"], "search": "/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/ai-blame/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="/assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

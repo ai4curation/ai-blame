@@ -1,0 +1,2496 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
+      
+      
+      
+      
+        <link rel="prev" href="../performance-and-caching/">
+      
+      
+        <link rel="next" href="../../reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Desktop App - ai-blame</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tauri-desktop-app" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ai-blame" class="md-header__button md-logo" aria-label="ai-blame" data-md-component="logo">
+      
+  <img src="../../assets/ai-blame-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ai-blame
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Desktop App
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ai4curation/ai-blame" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ai4curation/ai-blame
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ai-blame" class="md-nav__button md-logo" aria-label="ai-blame" data-md-component="logo">
+      
+  <img src="../../assets/ai-blame-logo.png" alt="logo">
+
+    </a>
+    ai-blame
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ai4curation/ai-blame" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ai4curation/ai-blame
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/python-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Output Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../file-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle Different File Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-the-desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use the Desktop App?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blame-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blame Viewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transcripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transcripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation &amp; Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation &amp; Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the App
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-desktop-app-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Desktop App (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-development-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Development Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-static-web-view-no-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Static Web View (No Backend)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-release-binaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Release Binaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frontend-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend (UI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-rust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend (Rust)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-traces-found-or-timelinetranscripts-are-empty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No traces found" or Timeline/Transcripts are empty
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tauri-app-wont-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tauri app won't build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui-looks-broken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI looks broken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocked-by-csp-errors-in-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Blocked by CSP" errors in console
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-to-the-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing to the UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-vs-desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI vs. Desktop App
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config-file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How It Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/trace-format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/related-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faqs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-the-desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use the Desktop App?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blame-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blame Viewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transcripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transcripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation &amp; Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation &amp; Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the App
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-desktop-app-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Desktop App (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-development-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Development Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-static-web-view-no-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Static Web View (No Backend)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-release-binaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Release Binaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frontend-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend (UI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-rust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend (Rust)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-traces-found-or-timelinetranscripts-are-empty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No traces found" or Timeline/Transcripts are empty
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tauri-app-wont-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tauri app won't build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui-looks-broken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI looks broken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocked-by-csp-errors-in-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Blocked by CSP" errors in console
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-to-the-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing to the UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-vs-desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI vs. Desktop App
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="tauri-desktop-app">Tauri Desktop App</h1>
+<h2 id="overview">Overview</h2>
+<p>The AI Blame Tauri app provides a modern, cross-platform desktop interface for visualizing and exploring AI-assisted code edits. Built with Tauri, the app offers a fast, native experience with a responsive web-based UI that connects directly to the ai-blame Rust library.</p>
+<p><img alt="Blame Viewer" src="../../assets/screenshots/ui-blame-view.png" /></p>
+<p>The desktop app complements the CLI by providing visual exploration of AI-assisted edits with interactive navigation between views.</p>
+<h2 id="why-use-the-desktop-app">Why Use the Desktop App?</h2>
+<p>The Tauri app complements the CLI by providing:</p>
+<ul>
+<li><strong>Visual blame viewer</strong> — Inspect file-level attribution with edit history and session details</li>
+<li><strong>Timeline view</strong> — Chronological list of all AI edits with direct navigation to files</li>
+<li><strong>Transcript search</strong> — Search across all AI sessions to find specific conversations</li>
+<li><strong>Cross-view navigation</strong> — Jump from timeline → blame → transcript and back</li>
+<li><strong>Configuration studio</strong> — Edit <code>.ai-blame.yaml</code> visually with live preview (planned)</li>
+<li><strong>Real-time monitoring</strong> — Watch for new traces (planned)</li>
+</ul>
+<p>For comprehensive CLI functionality, see the <a href="../../reference/cli/">CLI documentation</a>.</p>
+<h2 id="user-interface">User Interface</h2>
+<p>The app features a modern, responsive interface with four main views accessible from the sidebar navigation. Each view is fully functional and connected to the backend.</p>
+<h3 id="blame-viewer">Blame Viewer</h3>
+<p>View file-level attribution showing which AI models edited specific lines of code.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>Three-panel layout:</strong><ul>
+<li>Files panel (left): Browse project files with search and "AI-touched only" filter</li>
+<li>Code panel (center): View file content with line numbers and attribution</li>
+<li>Details panel (right): Show model, timestamp, and session info for selected lines</li>
+</ul>
+</li>
+<li><strong>Interactive elements:</strong><ul>
+<li>Click a line to see who edited it, when, and via which session</li>
+<li>Click the session ID in details to jump to the transcript</li>
+<li>Clickable file names for quick selection</li>
+<li>Search files by name pattern</li>
+</ul>
+</li>
+<li><strong>Filtering:</strong><ul>
+<li>Toggle "AI-touched only" to see only files edited by AI</li>
+<li>Search for specific files</li>
+</ul>
+</li>
+</ul>
+<p><strong>Planned improvements:</strong></p>
+<ul>
+<li>Syntax highlighting for all file types</li>
+<li>Color-coded lines by AI model</li>
+<li>Filter by model, date range, or file pattern</li>
+<li>Export to HTML</li>
+</ul>
+<h3 id="timeline">Timeline</h3>
+<p><img alt="Timeline View" src="../../assets/screenshots/ui-timeline-view.png" /></p>
+<p>Chronological list of all AI edits in your project with direct navigation to source files.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>Timeline table</strong> with columns:<ul>
+<li>Timestamp (formatted local time)</li>
+<li>Action (CREATED or EDITED)</li>
+<li>File (clickable to jump to blame viewer)</li>
+<li>Model (AI model used)</li>
+<li>Agent (agent tool and version, e.g., claude-code@2.0)</li>
+</ul>
+</li>
+<li><strong>Controls:</strong><ul>
+<li>Limit: Configure how many recent edits to show (default 50)</li>
+<li>Skip Codex: Exclude GitHub Copilot/Codex traces</li>
+</ul>
+</li>
+<li><strong>Navigation:</strong><ul>
+<li>Click any file name to jump to Blame Viewer with that file loaded</li>
+<li>See agent version alongside agent name for context</li>
+</ul>
+</li>
+</ul>
+<p><strong>Planned improvements:</strong></p>
+<ul>
+<li>Filter by model, date range, or file pattern</li>
+<li>Heatmap showing peak editing times</li>
+<li>Aggregate statistics (most-edited files, most-active models)</li>
+</ul>
+<h3 id="transcripts">Transcripts</h3>
+<p><img alt="Transcripts View" src="../../assets/screenshots/ui-transcripts-view.png" /></p>
+<p>Search and explore AI conversation sessions with full message content.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>Session list</strong> (left side):<ul>
+<li>Browse all AI sessions discovered in your project</li>
+<li>Shows session date, message count, and agent type</li>
+<li>Clickable sessions to view full conversation</li>
+</ul>
+</li>
+<li><strong>Search within transcript:</strong><ul>
+<li>Real-time search across message content (case-insensitive)</li>
+<li>Filters messages as you type</li>
+<li>Shows "no matches" when search returns empty</li>
+</ul>
+</li>
+<li><strong>Transcript viewer</strong> (right side):<ul>
+<li>Full conversation history with user and assistant messages</li>
+<li>Message metadata: timestamp, model, token usage</li>
+<li>Content blocks: text, thinking, code, tool use, commands</li>
+<li>Formatted output for all content types</li>
+</ul>
+</li>
+<li><strong>Navigation:</strong><ul>
+<li>Click session ID from Blame Details to jump here</li>
+<li>Automatically loads the session transcript</li>
+</ul>
+</li>
+</ul>
+<p><strong>Planned improvements:</strong></p>
+<ul>
+<li>Cross-transcript search (find text across all sessions)</li>
+<li>Filter sessions by agent tool, model, date range</li>
+<li>Export transcripts to markdown or PDF</li>
+<li>Syntax highlighting for code blocks</li>
+</ul>
+<h3 id="settings">Settings</h3>
+<p><img alt="Settings View" src="../../assets/screenshots/ui-settings-view.png" /></p>
+<p>Configure AI Blame behavior and manage project settings.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>General settings:</strong><ul>
+<li>Project path selection via file picker</li>
+<li>Home directory override for trace discovery</li>
+<li>Enable/disable DuckDB caching</li>
+</ul>
+</li>
+<li><strong>Cache management:</strong><ul>
+<li>Clear cache button to reset cached trace data</li>
+<li>Toggle caching on/off</li>
+</ul>
+</li>
+<li><strong>Future options:</strong><ul>
+<li>Default policy (Sidecar, Append, Comment, Skip)</li>
+<li>Configuration file editor</li>
+</ul>
+</li>
+</ul>
+<h2 id="installation-setup">Installation &amp; Setup</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>To build or run the Tauri app, you need:</p>
+<ul>
+<li><a href="https://rustup.rs/">Rust toolchain</a> (latest stable)</li>
+<li><a href="https://tauri.app/v1/guides/getting-started/prerequisites/">Tauri prerequisites</a> for your platform:<ul>
+<li><strong>Linux:</strong> <code>webkit2gtk</code>, <code>libgtk-3</code>, <code>libayatana-appindicator3</code></li>
+<li><strong>macOS:</strong> Xcode Command Line Tools</li>
+<li><strong>Windows:</strong> Microsoft Visual Studio C++ Build Tools</li>
+</ul>
+</li>
+</ul>
+<p>Check your setup:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cargo<span class="w"> </span>tauri<span class="w"> </span>info<span class="w">  </span><span class="c1"># Verify prerequisites are installed</span>
+</code></pre></div>
+<h3 id="running-the-app">Running the App</h3>
+<h4 id="option-1-desktop-app-recommended">Option 1: Desktop App (Recommended)</h4>
+<p>Build and run the Tauri desktop application:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From repo root</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>src-tauri
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cargo<span class="w"> </span>run<span class="w"> </span>--release
+</code></pre></div>
+<p>This launches the native desktop app with the UI loaded from the <code>../ui/</code> directory.</p>
+<h4 id="option-2-development-mode">Option 2: Development Mode</h4>
+<p>For UI development with hot reload (requires Tauri CLI):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install Tauri CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cargo<span class="w"> </span>install<span class="w"> </span>tauri-cli
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run in dev mode (from repo root)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cargo<span class="w"> </span>tauri<span class="w"> </span>dev
+</code></pre></div>
+<p>Changes to <code>ui/</code> files will automatically refresh the app.</p>
+<h4 id="option-3-static-web-view-no-backend">Option 3: Static Web View (No Backend)</h4>
+<p>For quick UI prototyping without Tauri:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From repo root, serve the static UI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python3<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span>-d<span class="w"> </span>ui<span class="w"> </span><span class="m">8000</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Visit http://localhost:8000 in your browser</span>
+</code></pre></div>
+<p><strong>Note:</strong> The browser version has no backend access, so Tauri-specific features (file picker, trace scanning) won't work.</p>
+<h3 id="building-release-binaries">Building Release Binaries</h3>
+<p>To create distributable binaries for your platform:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From repo root</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cargo<span class="w"> </span>tauri<span class="w"> </span>build
+</code></pre></div>
+<p>This generates platform-specific installers in <code>src-tauri/target/release/bundle/</code>:</p>
+<ul>
+<li><strong>Windows:</strong> <code>.msi</code> and <code>.exe</code> installers</li>
+<li><strong>macOS:</strong> <code>.dmg</code> and <code>.app</code> bundle</li>
+<li><strong>Linux:</strong> <code>.AppImage</code>, <code>.deb</code>, and <code>.rpm</code> packages</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<p>The Tauri app consists of two main parts:</p>
+<h3 id="frontend-ui">Frontend (UI)</h3>
+<p>Located in the <code>ui/</code> directory:</p>
+<ul>
+<li><strong><code>index.html</code></strong> — Page structure and layout</li>
+<li><strong><code>styles.css</code></strong> — Responsive design and theming</li>
+<li><strong><code>app.js</code></strong> — Navigation logic and mock data</li>
+</ul>
+<p>The frontend is a simple HTML/CSS/JavaScript application without external dependencies.</p>
+<h3 id="backend-rust">Backend (Rust)</h3>
+<p>Located in <code>src-tauri/src/main.rs</code>, the Tauri backend calls the core <code>ai-blame</code> library with no code duplication.</p>
+<p><strong>Current backend commands:</strong></p>
+<ul>
+<li><code>app_info</code> — Application name and version</li>
+<li><code>pick_project_dir</code> — File picker for project selection</li>
+<li><code>list_project_files</code> — List files in project with filtering</li>
+<li><code>list_agent_touched_files</code> — Get files edited by AI agents</li>
+<li><code>blame_file</code> — Generate line-level attribution for a file</li>
+<li><code>list_timeline</code> — Get chronological list of all edits with filtering</li>
+<li><code>list_transcripts</code> — Discover all AI conversation sessions</li>
+<li><code>get_transcript</code> — Load full transcript by session ID</li>
+<li><code>search_transcripts</code> — Search transcripts by query, agent, model, date range</li>
+</ul>
+<p><strong>Planned backend commands:</strong></p>
+<ul>
+<li><code>load_config</code> — Load <code>.ai-blame.yaml</code> configuration</li>
+<li><code>save_config</code> — Save configuration to file</li>
+<li>Advanced trace statistics and analytics</li>
+</ul>
+<h3 id="communication">Communication</h3>
+<p>The frontend and backend communicate via Tauri's IPC (Inter-Process Communication):</p>
+<ul>
+<li><strong>Commands:</strong> Frontend calls Rust functions (async RPC)</li>
+<li><strong>Events:</strong> Backend pushes updates to frontend (pub/sub)</li>
+</ul>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li><strong>No file operations</strong> — Cannot read or write files from the UI (CLI recommended for annotate)</li>
+<li><strong>Limited state persistence</strong> — Selected project is remembered, but other settings reset on restart</li>
+<li><strong>No syntax highlighting</strong> — Code blocks display as plain text</li>
+<li><strong>No color-coding</strong> — Lines not yet color-coded by AI model</li>
+<li><strong>Search limitations</strong> — In-transcript search is JavaScript-based (frontend-only); cross-transcript search available via backend but not yet exposed in UI</li>
+<li><strong>No keyboard shortcuts</strong> — Navigation is primarily mouse/click-based</li>
+</ul>
+<h2 id="development-roadmap">Development Roadmap</h2>
+<h3 id="planned-enhancements">Planned Enhancements</h3>
+<p><strong>Search &amp; Discovery:</strong></p>
+<ul>
+<li>Expose cross-transcript search in UI</li>
+<li>Add filters: by model, agent, date range</li>
+<li>Session search by metadata</li>
+</ul>
+<p><strong>Blame Viewer:</strong></p>
+<ul>
+<li>Syntax highlighting for code files</li>
+<li>Color-code lines by AI model</li>
+<li>Edit history timeline for selected lines</li>
+<li>Export blame view to HTML or markdown</li>
+</ul>
+<p><strong>Configuration UI:</strong></p>
+<ul>
+<li>Load and validate <code>.ai-blame.yaml</code> files</li>
+<li>Visual rule builder</li>
+<li>Real-time configuration preview</li>
+</ul>
+<p><strong>Polish &amp; Advanced Features:</strong></p>
+<ul>
+<li>Persistent state (selected project, view preferences)</li>
+<li>Dark mode support with persistence</li>
+<li>Real-time file system watching</li>
+<li>Advanced analytics: heatmaps, statistics</li>
+<li>Keyboard shortcuts and accessibility</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="no-traces-found-or-timelinetranscripts-are-empty">"No traces found" or Timeline/Transcripts are empty</h3>
+<p>This can happen if:
+1. <strong>Project not set</strong> — Click "📁 Open Project" in the header and select your project directory
+2. <strong>No traces discovered</strong> — Check that your project has Claude Code traces in <code>~/.claude/projects/</code>
+3. <strong>Home directory path</strong> — If traces are in a custom location, set it in Settings → Home Directory</p>
+<p>For debugging, use the CLI:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ai-blame<span class="w"> </span>stats<span class="w">  </span><span class="c1"># Check what traces were found</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ai-blame<span class="w"> </span>timeline<span class="w">  </span><span class="c1"># See all timeline events</span>
+</code></pre></div></p>
+<h3 id="tauri-app-wont-build">Tauri app won't build</h3>
+<p>Ensure you have all Tauri prerequisites installed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cargo<span class="w"> </span>tauri<span class="w"> </span>info<span class="w">  </span><span class="c1"># Check your setup</span>
+</code></pre></div>
+<p>Common issues:</p>
+<ul>
+<li><strong>Linux:</strong> Missing webkit2gtk or GTK development libraries</li>
+<li><strong>macOS:</strong> Xcode Command Line Tools not installed</li>
+<li><strong>Windows:</strong> Missing Visual Studio C++ Build Tools</li>
+</ul>
+<p>See the <a href="https://tauri.app/v1/guides/getting-started/prerequisites/">Tauri prerequisites guide</a> for platform-specific instructions.</p>
+<h3 id="ui-looks-broken">UI looks broken</h3>
+<p>Try clearing the cache or rebuilding:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span>src-tauri
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cargo<span class="w"> </span>clean
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cargo<span class="w"> </span>build<span class="w"> </span>--release
+</code></pre></div>
+<h3 id="blocked-by-csp-errors-in-console">"Blocked by CSP" errors in console</h3>
+<p>The Content Security Policy in <code>tauri.conf.json</code> restricts resource loading for security. This is normal — the app is designed to work within these constraints.</p>
+<h2 id="contributing-to-the-ui">Contributing to the UI</h2>
+<p>We welcome contributions! Here are ways you can help:</p>
+<ol>
+<li><strong>UI/UX improvements</strong> — Suggest layout changes or new features</li>
+<li><strong>Frontend development</strong> — Improve HTML/CSS/JS in <code>ui/</code></li>
+<li><strong>Backend commands</strong> — Implement Tauri commands in <code>src-tauri/src/main.rs</code></li>
+<li><strong>Testing</strong> — Test the UI and report issues</li>
+<li><strong>Documentation</strong> — Improve this guide or add tutorials</li>
+</ol>
+<p>See <a href="https://github.com/ai4curation/ai-blame/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> for development setup and guidelines.</p>
+<h2 id="cli-vs-desktop-app">CLI vs. Desktop App</h2>
+<p>Both the <strong>CLI and desktop app</strong> are now functional for exploring AI-assisted edits:</p>
+<p><strong>Use the Desktop App for:</strong>
+- Visual blame exploration with details panel
+- Timeline view of all edits
+- Searching and exploring transcripts
+- Cross-view navigation (jump between timeline, blame, and transcripts)
+- Interactive exploration of AI sessions</p>
+<p><strong>Use the CLI for:</strong>
+- Bulk operations and automation
+- Annotating files with provenance data
+- Advanced filtering and reporting
+- Scripting and integration with other tools
+- Production workflows</p>
+<p>Example CLI commands:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ai-blame<span class="w"> </span>stats<span class="w">              </span><span class="c1"># See available traces</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>src/main.rs<span class="w">  </span><span class="c1"># Show line-level blame</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ai-blame<span class="w"> </span>timeline<span class="w">           </span><span class="c1"># Chronological timeline</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ai-blame<span class="w"> </span>report<span class="w">             </span><span class="c1"># Generate a provenance report</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ai-blame<span class="w"> </span>annotate<span class="w">           </span><span class="c1"># Embed provenance in files</span>
+</code></pre></div></p>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="https://github.com/ai4curation/ai-blame/blob/main/ui/TODO.md">UI Prototype TODO</a> — Detailed implementation roadmap</li>
+<li><a href="https://github.com/ai4curation/ai-blame/blob/main/PLAN-UI.md">UI Implementation Plan</a> — Full architecture and design doc</li>
+<li><a href="https://tauri.app/v1/guides/">Tauri Documentation</a> — Tauri framework documentation</li>
+<li><a href="../../reference/cli/">CLI Reference</a> — Full CLI command documentation</li>
+<li><a href="../configuration/">Configuration Guide</a> — How to configure AI Blame behavior</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.sections", "navigation.expand", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2282 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
+      
+      
+      
+      
+        <link rel="prev" href="../explanation/related-tools/">
+      
+      
+        <link rel="next" href="../about/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>FAQs - ai-blame</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#frequently-asked-questions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ai-blame" class="md-header__button md-logo" aria-label="ai-blame" data-md-component="logo">
+      
+  <img src="../assets/ai-blame-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ai-blame
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FAQs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ai4curation/ai-blame" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ai4curation/ai-blame
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ai-blame" class="md-nav__button md-logo" aria-label="ai-blame" data-md-component="logo">
+      
+  <img src="../assets/ai-blame-logo.png" alt="logo">
+
+    </a>
+    ai-blame
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ai4curation/ai-blame" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ai4curation/ai-blame
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/python-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Output Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/file-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle Different File Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/test-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/tauri-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/config-file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How It Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/trace-format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/related-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ghost-commits-and-codex-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ghost Commits and Codex Attribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ghost Commits and Codex Attribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-ghost-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a "ghost commit"?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-make-ghost-commits-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I make ghost commits "real"?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How do I make ghost commits &#34;real&#34;?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-commit-the-changes-to-a-real-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Commit the changes to a real branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-create-a-branch-from-a-ghost-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Create a branch from a ghost commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-just-use-ai-blame-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Just use ai-blame (automatic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-arent-my-codex-cli-edits-showing-up-in-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why aren't my Codex CLI edits showing up in blame?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why aren&#39;t my Codex CLI edits showing up in blame?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-changes-made-with-bash-commands-not-captured-in-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Changes made with bash commands (not captured in traces)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-changes-in-working-directory-not-yet-in-a-ghost-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Changes in working directory (not yet in a ghost commit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-no-ghost-commit-was-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. No ghost commit was created
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-know-if-a-file-was-edited-by-codex-or-claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I know if a file was edited by Codex or Claude?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-do-some-lines-show-claude-attribution-when-codex-edited-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do some lines show Claude attribution when Codex edited them?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-is-ai-blame-stats-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is ai-blame stats slow?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-can-i-speed-up-repeated-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How can I speed up repeated runs?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-much-faster-is-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How much faster is caching?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-is-the-cache-stored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where is the cache stored?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-clear-the-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I clear the cache?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-ai-tools-does-ai-blame-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which AI tools does ai-blame support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-ai-blame-without-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I use ai-blame without traces?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-trust-the-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I trust the attribution?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-exclude-certain-files-from-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I exclude certain files from blame?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-ai-blame-reports-no-edits-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What if ai-blame reports no edits found?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ghost-commits-and-codex-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ghost Commits and Codex Attribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ghost Commits and Codex Attribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-ghost-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a "ghost commit"?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-make-ghost-commits-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I make ghost commits "real"?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How do I make ghost commits &#34;real&#34;?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-commit-the-changes-to-a-real-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Commit the changes to a real branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-create-a-branch-from-a-ghost-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Create a branch from a ghost commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-just-use-ai-blame-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Just use ai-blame (automatic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-arent-my-codex-cli-edits-showing-up-in-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why aren't my Codex CLI edits showing up in blame?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why aren&#39;t my Codex CLI edits showing up in blame?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-changes-made-with-bash-commands-not-captured-in-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Changes made with bash commands (not captured in traces)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-changes-in-working-directory-not-yet-in-a-ghost-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Changes in working directory (not yet in a ghost commit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-no-ghost-commit-was-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. No ghost commit was created
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-know-if-a-file-was-edited-by-codex-or-claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I know if a file was edited by Codex or Claude?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-do-some-lines-show-claude-attribution-when-codex-edited-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do some lines show Claude attribution when Codex edited them?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-is-ai-blame-stats-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is ai-blame stats slow?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-can-i-speed-up-repeated-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How can I speed up repeated runs?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-much-faster-is-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How much faster is caching?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-is-the-cache-stored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where is the cache stored?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-clear-the-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I clear the cache?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-ai-tools-does-ai-blame-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which AI tools does ai-blame support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-ai-blame-without-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I use ai-blame without traces?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-trust-the-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I trust the attribution?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-exclude-certain-files-from-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I exclude certain files from blame?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-ai-blame-reports-no-edits-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What if ai-blame reports no edits found?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
+<h2 id="ghost-commits-and-codex-attribution">Ghost Commits and Codex Attribution</h2>
+<h3 id="what-is-a-ghost-commit">What is a "ghost commit"?</h3>
+<p>A <strong>ghost commit</strong> is a special git commit object created by Codex CLI to capture file snapshots during execution. These commits:</p>
+<ul>
+<li>Are stored in your <code>.git/objects/</code> directory (the git object database)</li>
+<li>Have the author <code>Codex Snapshot &lt;snapshot@codex.local&gt;</code></li>
+<li>Are <strong>not</strong> attached to any branch or tag (they're not in your commit history)</li>
+<li>Can be inspected with <code>git show &lt;commit-hash&gt;</code> or <code>git cat-file</code></li>
+</ul>
+<p><strong>Example</strong>: When Codex CLI starts or finishes an operation, it creates a ghost commit capturing the current state of all tracked files.</p>
+<h3 id="how-do-i-make-ghost-commits-real">How do I make ghost commits "real"?</h3>
+<p>Ghost commits are ephemeral reference objects used only for tracking file snapshots. To permanently record Codex changes in your git history:</p>
+<h4 id="option-1-commit-the-changes-to-a-real-branch">Option 1: Commit the changes to a real branch</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># After Codex CLI finishes, commit the changes normally</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>add<span class="w"> </span>.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Changes from Codex CLI session&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div>
+<p>This is the standard approach - just treat Codex output like you would any other generated code.</p>
+<h4 id="option-2-create-a-branch-from-a-ghost-commit">Option 2: Create a branch from a ghost commit</h4>
+<p>If you want to preserve a specific ghost commit snapshot as a real branch:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Find the ghost commit hash from logs or git object database</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">GHOST_COMMIT</span><span class="o">=</span><span class="s2">&quot;b843e9becf13584978668f53f7a787c093494d06&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a real branch pointing to it</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git<span class="w"> </span>branch<span class="w"> </span>codex-snapshot<span class="w"> </span><span class="nv">$GHOST_COMMIT</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or create a tag</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git<span class="w"> </span>tag<span class="w"> </span>codex-session-001<span class="w"> </span><span class="nv">$GHOST_COMMIT</span>
+</code></pre></div>
+<h4 id="option-3-just-use-ai-blame-automatic">Option 3: Just use ai-blame (automatic)</h4>
+<p>If you've committed changes to git <strong>after</strong> running Codex CLI, <code>ai-blame</code> will detect:
+- Claude Code edits (stored in traces)
+- Codex CLI changes (detected via ghost commits + git diffs)</p>
+<p>No special steps needed - just commit normally.</p>
+<h3 id="why-arent-my-codex-cli-edits-showing-up-in-blame">Why aren't my Codex CLI edits showing up in blame?</h3>
+<p>There are several reasons:</p>
+<h4 id="1-changes-made-with-bash-commands-not-captured-in-traces">1. <strong>Changes made with bash commands (not captured in traces)</strong></h4>
+<p>If you use Codex CLI to run bash commands that modify files (like <code>&gt;&gt; foo.md</code>), these changes are <strong>not recorded</strong> in the trace format:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># This gets logged in ~/.codex/log/*, but NOT in the traces</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>codex<span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="s2">&quot;printf &#39;some text&#39; &gt;&gt; foo.md&quot;</span>
+</code></pre></div>
+<p><strong>Root cause</strong>: Bash commands run through Codex don't produce structured edit records - only shell command logs.</p>
+<p><strong>Solutions</strong>:
+- Use Codex's structured file editing features (not raw bash <code>&gt;&gt;</code>)
+- Commit the changes after running bash, then use git to understand what changed
+- Use <code>ai-blame report</code> with git integration to see uncommitted changes</p>
+<h4 id="2-changes-in-working-directory-not-yet-in-a-ghost-commit">2. <strong>Changes in working directory (not yet in a ghost commit)</strong></h4>
+<p>If you edit files in your working directory <strong>after</strong> Codex's last snapshot:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Codex creates ghost commit with version A of foo.md</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Then you edit foo.md manually</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Your edits are in working directory, NOT in the ghost commit</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Commit the changes to git, then rerun <code>ai-blame</code>.</p>
+<h4 id="3-no-ghost-commit-was-created">3. <strong>No ghost commit was created</strong></h4>
+<p>Ghost commits are created at specific points (usually session start/end). If a session doesn't create a ghost commit, file changes won't be detected.</p>
+<p><strong>Solution</strong>: Run a complete Codex CLI session that includes snapshots, or manually commit changes to git.</p>
+<h3 id="how-do-i-know-if-a-file-was-edited-by-codex-or-claude">How do I know if a file was edited by Codex or Claude?</h3>
+<p>Use <code>ai-blame blame &lt;file&gt;</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>foo.md
+</code></pre></div>
+<p>This shows:
+- <strong>claude-haiku-4-5-...</strong>: Edit made by Claude Code
+- <strong>gpt-5.2-codex</strong>: Edit made by Codex CLI
+- <strong>No attribution</strong>: Untracked changes or uncommitted edits</p>
+<p>The timestamp and line numbers show exactly what changed when.</p>
+<h3 id="why-do-some-lines-show-claude-attribution-when-codex-edited-them">Why do some lines show Claude attribution when Codex edited them?</h3>
+<p>This happens when:</p>
+<ol>
+<li><strong>Claude initially created the file</strong> (stored in Claude Code traces)</li>
+<li><strong>Codex later added lines</strong> (but via bash <code>&gt;&gt;</code> or uncommitted changes)</li>
+<li><strong>ai-blame can only see the Claude creation</strong> (because Codex changes aren't in parseable traces)</li>
+</ol>
+<p><strong>Example</strong> from your test:
+- Lines 1-21: Created by Claude (2025-12-28 15:21)
+- Lines 22-23: Added by Codex bash script (visible in logs but not in traces)
+- Result: All lines show Claude attribution</p>
+<p><strong>Why this is expected</strong>: The blame algorithm works backwards through trace records. Without a structured edit record, it can't attribute those lines to Codex.</p>
+<p><strong>Workaround</strong>: Commit the Codex changes to git before running <code>ai-blame</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After Codex finishes and modifies files:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>add<span class="w"> </span>foo.md
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Codex updates&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>foo.md<span class="w">  </span><span class="c1"># Now it will detect the edit</span>
+</code></pre></div>
+<h2 id="performance">Performance</h2>
+<h3 id="why-is-ai-blame-stats-slow">Why is <code>ai-blame stats</code> slow?</h3>
+<p>The tool needs to parse hundreds of trace files to extract edit records. Initial runs typically take 30-60 seconds depending on trace history size.</p>
+<h3 id="how-can-i-speed-up-repeated-runs">How can I speed up repeated runs?</h3>
+<p>Caching is enabled by default! No special configuration needed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># First run: ~55 seconds (builds cache)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ai-blame<span class="w"> </span>stats
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Second run: ~3-5 seconds (uses cache)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ai-blame<span class="w"> </span>stats
+</code></pre></div>
+<p>You can disable it with <code>--no-cache</code> or <code>export AI_BLAME_NO_CACHE=1</code>.</p>
+<p>See <a href="../how-to/performance-and-caching/">Performance and Caching</a> for full details.</p>
+<h3 id="how-much-faster-is-caching">How much faster is caching?</h3>
+<p><strong>Expected speedup</strong>: ~90% for unchanged traces</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First run (no cache)</td>
+<td>53 seconds</td>
+</tr>
+<tr>
+<td>First run (with cache)</td>
+<td>~55 seconds</td>
+</tr>
+<tr>
+<td>Second run (cache hit)</td>
+<td>~3-5 seconds</td>
+</tr>
+<tr>
+<td>10% files changed</td>
+<td>~10-15 seconds</td>
+</tr>
+</tbody>
+</table>
+<p>Speedup scales with trace count - larger trace histories see bigger wins.</p>
+<h3 id="where-is-the-cache-stored">Where is the cache stored?</h3>
+<p>The cache is stored in <code>.ai-blame.ddb</code> next to your trace files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>~/.claude/projects/myproject/
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── session-1.jsonl
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>├── session-2.jsonl
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>└── .ai-blame.ddb  ← Cache file
+</code></pre></div>
+<h3 id="how-do-i-clear-the-cache">How do I clear the cache?</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Delete the cache file</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>rm<span class="w"> </span>.ai-blame.ddb
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Or force rebuild via CLI</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--rebuild-cache
+</code></pre></div>
+<h2 id="general-questions">General Questions</h2>
+<h3 id="which-ai-tools-does-ai-blame-support">Which AI tools does ai-blame support?</h3>
+<ul>
+<li><strong>Claude Code</strong>: Full support (stores structured edit records in traces)</li>
+<li><strong>GitHub Copilot</strong>: Full support (similar trace structure)</li>
+<li><strong>Codex CLI</strong>: Full support (via ghost commits + snapshot snapshots)</li>
+<li><strong>Other tools</strong>: Limited support (depends on trace format)</li>
+</ul>
+<p>See <a href="../explanation/trace-format/">Trace Format</a> for details.</p>
+<h3 id="can-i-use-ai-blame-without-traces">Can I use ai-blame without traces?</h3>
+<p>No - <code>ai-blame</code> requires trace data to know who made which changes. Without traces, it can only show:
+- Git history (via <code>git blame</code>)
+- File creation/modification times (generic, not AI-specific)</p>
+<p>For uncommitted changes without trace data, use:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>git<span class="w"> </span>diff<span class="w">  </span><span class="c1"># See what changed</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>log<span class="w">   </span><span class="c1"># See git history with attribution</span>
+</code></pre></div></p>
+<h3 id="how-do-i-trust-the-attribution">How do I trust the attribution?</h3>
+<p>The attribution is as trustworthy as your traces:</p>
+<ol>
+<li><strong>Traces are generated by the AI tool</strong> (Claude, Copilot, Codex)</li>
+<li><strong>Timestamps come from the tool's system clock</strong></li>
+<li><strong>No modifications are made</strong> to traces during extraction</li>
+</ol>
+<p>However:
+- Traces don't verify that the AI actually made the changes (user could edit after)
+- Uncommitted working directory changes are invisible to <code>ai-blame</code>
+- Ghost commits can be cleaned up by aggressive <code>git gc</code></p>
+<p><strong>Best practice</strong>: Use <code>ai-blame</code> in conjunction with <code>git log</code> for full provenance understanding.</p>
+<h3 id="can-i-exclude-certain-files-from-blame">Can I exclude certain files from blame?</h3>
+<p>Yes - use the configuration file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># .ai-blame.yaml</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nt">filters</span><span class="p">:</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">file_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*.py&quot;</span><span class="w">  </span><span class="c1"># Only show Python files</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">min_change_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># Ignore changes smaller than 100 bytes</span>
+</code></pre></div>
+<p>See <a href="../how-to/configuration/">Configuration</a> for details.</p>
+<h3 id="what-if-ai-blame-reports-no-edits-found">What if ai-blame reports no edits found?</h3>
+<p>Possible causes:</p>
+<ol>
+<li><strong>No traces in the expected directory</strong></li>
+<li>Check <code>~/.claude/projects/</code> and <code>~/.codex/sessions/</code></li>
+<li>
+<p>Ensure the project was actually edited with Claude Code or Codex CLI</p>
+</li>
+<li>
+<p><strong>File pattern doesn't match</strong></p>
+</li>
+<li>Use <code>ai-blame report</code> without filters to see all files</li>
+<li>
+<p>Check file paths are absolute or relative correctly</p>
+</li>
+<li>
+<p><strong>Traces are for a different project</strong></p>
+</li>
+<li>Claude Code and Codex CLI create separate traces per project</li>
+<li>
+<p>Use <code>--trace-dir</code> to specify the correct trace directory</p>
+</li>
+<li>
+<p><strong>Time filters excluded all edits</strong></p>
+</li>
+<li>Check <code>--since</code> and <code>--until</code> date ranges</li>
+</ol>
+<p><strong>Debugging</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--trace-dir<span class="w"> </span>~/.claude/projects
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>.<span class="w"> </span>--show-all<span class="w">  </span><span class="c1"># See all files and edits</span>
+</code></pre></div></p>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../explanation/codex-traces/">Codex CLI Traces</a> - Technical details about ghost commits</li>
+<li><a href="../explanation/claude-traces/">Claude Code Traces</a> - How Claude traces work</li>
+<li><a href="../explanation/how-it-works/">How It Works</a> - The blame algorithm explained</li>
+<li><a href="../reference/cli/">CLI Reference</a> - Command-line options</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy", "navigation.sections", "navigation.expand", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

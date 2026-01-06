@@ -6,14 +6,12 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Extract provenance from AI agent execution traces">
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
       
       
       
-        <link rel="canonical" href="https://ai4curation.github.io/ai-blame/reference/cli/">
       
-      
-        <link rel="prev" href="../../how-to/test-data/">
+        <link rel="prev" href="../performance/">
       
       
         <link rel="next" href="../config-file/">
@@ -22,12 +20,12 @@
         
       
       
-      <link rel="icon" href="../../assets/ai-blame-logo.png">
+      <link rel="icon" href="../../assets/favicon.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>CLI Reference - ai-blame</title>
+        <title>CLI Syntax Reference - ai-blame</title>
       
     
     
@@ -78,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli-reference" class="md-skip">
+        <a href="#cli-syntax-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI Reference
+              CLI Syntax Reference
             
           </span>
         </div>
@@ -199,7 +197,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
       </div>
@@ -244,7 +242,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
     </div>
@@ -331,6 +329,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -484,6 +510,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../how-to/column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../how-to/file-types/" class="md-nav__link">
         
   
@@ -512,6 +566,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../how-to/shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../how-to/test-data/" class="md-nav__link">
         
   
@@ -520,6 +602,62 @@
     
   
     Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/tauri-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
   
 
     
@@ -598,6 +736,174 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -617,7 +923,7 @@
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    CLI Syntax Reference
   
 
     
@@ -635,7 +941,7 @@
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    CLI Syntax Reference
   
 
     
@@ -684,27 +990,16 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ai-blame-mine" class="md-nav__link">
+  <a href="#ai-blame-init" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ai-blame mine
+        ai-blame init
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ai-blame mine">
+    <nav class="md-nav" aria-label="ai-blame init">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arguments
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#options" class="md-nav__link">
@@ -734,16 +1029,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ai-blame-stats" class="md-nav__link">
+  <a href="#ai-blame-report" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ai-blame stats
+        ai-blame report
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ai-blame stats">
+    <nav class="md-nav" aria-label="ai-blame report">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#options_1" class="md-nav__link">
@@ -758,6 +1064,134 @@
         
           <li class="md-nav__item">
   <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-annotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame annotate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame annotate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame stats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame stats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame timeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Examples
@@ -783,6 +1217,189 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ai-blame-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame blame
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame blame">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-transcript-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame transcript list
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame transcript list">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#column-layout-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Layout Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-session-id-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Session ID Duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-transcript-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame transcript view
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame transcript view">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -797,6 +1414,51 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Trace Directory Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-completions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame completions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame completions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -804,17 +1466,6 @@
     <span class="md-ellipsis">
       
         Exit Codes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Environment
       
     </span>
   </a>
@@ -1010,6 +1661,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../explanation/transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../explanation/trace-format/" class="md-nav__link">
         
   
@@ -1018,6 +1697,62 @@
     
   
     Trace Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
   
 
     
@@ -1062,6 +1797,60 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faqs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1116,27 +1905,16 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ai-blame-mine" class="md-nav__link">
+  <a href="#ai-blame-init" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ai-blame mine
+        ai-blame init
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ai-blame mine">
+    <nav class="md-nav" aria-label="ai-blame init">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#arguments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arguments
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#options" class="md-nav__link">
@@ -1166,16 +1944,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ai-blame-stats" class="md-nav__link">
+  <a href="#ai-blame-report" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ai-blame stats
+        ai-blame report
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ai-blame stats">
+    <nav class="md-nav" aria-label="ai-blame report">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#options_1" class="md-nav__link">
@@ -1190,6 +1979,134 @@
         
           <li class="md-nav__item">
   <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-annotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame annotate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame annotate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame stats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame stats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame timeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Examples
@@ -1215,6 +2132,189 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ai-blame-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame blame
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame blame">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-transcript-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame transcript list
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame transcript list">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#column-layout-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Layout Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-session-id-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Session ID Duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-transcript-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame transcript view
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame transcript view">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1229,6 +2329,51 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Trace Directory Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ai-blame-completions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ai-blame completions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ai-blame completions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1236,17 +2381,6 @@
     <span class="md-ellipsis">
       
         Exit Codes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Environment
       
     </span>
   </a>
@@ -1273,8 +2407,17 @@
   
 
 
-<h1 id="cli-reference">CLI Reference</h1>
-<p>Complete reference for all <code>ai-blame</code> commands and options.</p>
+<h1 id="cli-syntax-reference">CLI Syntax Reference</h1>
+<p>Complete command syntax and options reference for <code>ai-blame</code>.</p>
+<p><strong>Note:</strong> This is a syntax reference. For conceptual guides and workflows, see:</p>
+<ul>
+<li><strong><a href="../">Command Index</a></strong> — Visual overview of all commands</li>
+<li><strong><a href="../setup/">Setup &amp; Configuration</a></strong> — <code>init</code> command deep-dive</li>
+<li><strong><a href="../annotation/">Provenance Annotation</a></strong> — <code>report</code> and <code>annotate</code> workflow</li>
+<li><strong><a href="../exploration/">Trace Exploration</a></strong> — <code>stats</code>, <code>timeline</code>, and <code>transcript</code> commands</li>
+<li><strong><a href="../blame-analysis/">Line-Level Analysis</a></strong> — <code>blame</code> command details</li>
+<li><strong><a href="../performance/">Performance</a></strong> — Caching and optimization strategies</li>
+</ul>
 <h2 id="global-options">Global Options</h2>
 <p>These options are available for all commands:</p>
 <table>
@@ -1289,12 +2432,69 @@
 <td><code>--help</code></td>
 <td>Show help message and exit</td>
 </tr>
+<tr>
+<td><code>--version</code></td>
+<td>Show version and exit</td>
+</tr>
 </tbody>
 </table>
 <h2 id="commands">Commands</h2>
-<h3 id="ai-blame-mine"><code>ai-blame mine</code></h3>
-<p>Mine Claude Code traces and add edit history to files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>TARGET<span class="o">]</span>
+<h3 id="ai-blame-init"><code>ai-blame init</code></h3>
+<p>Create a starter <code>.ai-blame.yaml</code> config file.</p>
+<p><strong>→ <a href="../setup/">Full Guide</a></strong> — Configuration options, flavors, setup workflows</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ai-blame<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h4 id="options">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Directory to write <code>.ai-blame.yaml</code> into</td>
+</tr>
+<tr>
+<td><code>--flavor &lt;sidecar\|in-place&gt;</code></td>
+<td></td>
+<td><code>sidecar</code></td>
+<td>Config template flavor</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td></td>
+<td>False</td>
+<td>Overwrite an existing <code>.ai-blame.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a starter config (sidecar mode: minimizes edits to existing files)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ai-blame<span class="w"> </span>init
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Prefer in-place annotations when possible</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ai-blame<span class="w"> </span>init<span class="w"> </span>--flavor<span class="w"> </span><span class="k">in</span>-place
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Overwrite an existing config</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ai-blame<span class="w"> </span>init<span class="w"> </span>--force
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">File writes</p>
+<p><code>ai-blame init</code> writes <strong>only</strong> <code>.ai-blame.yaml</code>.<br />
+<code>ai-blame annotate</code> will write to project files unless you pass <code>--dry-run</code>.</p>
+</div>
+<hr />
+<h3 id="ai-blame-report"><code>ai-blame report</code></h3>
+<p>Write a stdout report summarizing curation history (no filesystem changes).</p>
+<p><strong>→ <a href="../annotation/#the-report-command-preview-only">Full Guide</a></strong> — Filtering strategies, interpreting output, workflows</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ai-blame<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>TARGET<span class="o">]</span>
 </code></pre></div>
 <h4 id="arguments">Arguments</h4>
 <table>
@@ -1311,106 +2511,6 @@
 </tr>
 </tbody>
 </table>
-<h4 id="options">Options</h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Short</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--trace-dir</code></td>
-<td><code>-t</code></td>
-<td>Auto</td>
-<td>Claude trace directory (overrides <code>--dir</code> and <code>--home</code>)</td>
-</tr>
-<tr>
-<td><code>--dir</code></td>
-<td><code>-d</code></td>
-<td>cwd</td>
-<td>Target project directory. Traces looked up in <code>$home/.claude/projects/&lt;encoded-dir&gt;/</code></td>
-</tr>
-<tr>
-<td><code>--home</code></td>
-<td></td>
-<td><code>~</code></td>
-<td>Home directory where <code>.claude/</code> lives</td>
-</tr>
-<tr>
-<td><code>--config</code></td>
-<td><code>-c</code></td>
-<td>Auto</td>
-<td>Config file path (default: auto-find <code>.ai-blame.yaml</code>)</td>
-</tr>
-<tr>
-<td><code>--apply</code></td>
-<td><code>-a</code></td>
-<td>False</td>
-<td>Actually apply changes (default is dry-run)</td>
-</tr>
-<tr>
-<td><code>--initial-and-recent</code></td>
-<td><code>-ir</code></td>
-<td>False</td>
-<td>Only keep first and last edit per file</td>
-</tr>
-<tr>
-<td><code>--min-change-size</code></td>
-<td><code>-m</code></td>
-<td>0</td>
-<td>Skip edits smaller than N characters</td>
-</tr>
-<tr>
-<td><code>--pattern</code></td>
-<td><code>-p</code></td>
-<td></td>
-<td>Filter files by path pattern</td>
-</tr>
-<tr>
-<td><code>--show-all</code></td>
-<td></td>
-<td>False</td>
-<td>Show all YAML previews (not just first 5)</td>
-</tr>
-</tbody>
-</table>
-<h4 id="examples">Examples</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Dry run for current directory</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ai-blame<span class="w"> </span>mine
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Preview with initial+recent filter</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--initial-and-recent
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Apply changes</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--apply<span class="w"> </span>--initial-and-recent
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Filter to YAML files only</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Process specific file</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>config.yaml
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Use explicit trace directory</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>-t<span class="w"> </span>~/.claude/projects/-Users-me-other-project/
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Use different project directory</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--dir<span class="w"> </span>/path/to/project
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Use test data</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--dir<span class="w"> </span>tests/data<span class="w"> </span>--home<span class="w"> </span>tests/data
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Use custom config</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--config<span class="w"> </span>/path/to/.ai-blame.yaml
-</code></pre></div>
-<hr />
-<h3 id="ai-blame-stats"><code>ai-blame stats</code></h3>
-<p>Show statistics about available traces.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</code></pre></div>
 <h4 id="options_1">Options</h4>
 <table>
 <thead>
@@ -1423,53 +2523,596 @@
 </thead>
 <tbody>
 <tr>
-<td><code>--trace-dir</code></td>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
 <td><code>-t</code></td>
 <td>Auto</td>
-<td>Claude trace directory</td>
+<td>Claude trace directory (overrides <code>--dir</code> and <code>--home</code>)</td>
 </tr>
 <tr>
-<td><code>--dir</code></td>
+<td><code>--dir &lt;DIR&gt;</code></td>
 <td><code>-d</code></td>
 <td>cwd</td>
 <td>Target project directory</td>
 </tr>
 <tr>
-<td><code>--home</code></td>
+<td><code>--home &lt;HOME&gt;</code></td>
 <td></td>
 <td><code>~</code></td>
 <td>Home directory where <code>.claude/</code> lives</td>
 </tr>
 <tr>
-<td><code>--pattern</code></td>
-<td><code>-p</code></td>
+<td><code>--config &lt;CONFIG&gt;</code></td>
+<td><code>-c</code></td>
+<td>Auto</td>
+<td>Config file path (auto-find <code>.ai-blame.yaml</code> if present)</td>
+</tr>
+<tr>
+<td><code>--initial-and-recent</code></td>
 <td></td>
+<td>False</td>
+<td>Only keep first and last edit per file</td>
+</tr>
+<tr>
+<td><code>--min-change-size &lt;N&gt;</code></td>
+<td><code>-m</code></td>
+<td>0</td>
+<td>Skip intermediate edits smaller than N chars</td>
+</tr>
+<tr>
+<td><code>--show-all</code></td>
+<td></td>
+<td>False</td>
+<td>Show all YAML previews (not just first 5)</td>
+</tr>
+<tr>
+<td><code>--pattern &lt;PATTERN&gt;</code></td>
+<td><code>-p</code></td>
+<td><code>""</code></td>
 <td>Filter files by path pattern</td>
 </tr>
 </tbody>
 </table>
 <h4 id="examples_1">Examples</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Stats for current directory</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ai-blame<span class="w"> </span>stats
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Report for current directory</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ai-blame<span class="w"> </span>report
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Stats for specific project</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--dir<span class="w"> </span>/path/to/project
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Report with initial+recent filter</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>--initial-and-recent
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Stats for YAML files only</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Filter to YAML files only</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Stats from test data</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--dir<span class="w"> </span>tests/data<span class="w"> </span>--home<span class="w"> </span>tests/data
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Process specific file (substring match on path)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>config.yaml
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Use explicit trace directory</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>-t<span class="w"> </span>~/.claude/projects/-Users-me-other-project/
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Use different project directory</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>--dir<span class="w"> </span>/path/to/project
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Use custom config</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>ai-blame<span class="w"> </span>report<span class="w"> </span>--config<span class="w"> </span>/path/to/.ai-blame.yaml
+</code></pre></div>
+<hr />
+<h3 id="ai-blame-annotate"><code>ai-blame annotate</code></h3>
+<p>Annotate files or write sidecars/comments using output rules (writes by default).</p>
+<p><strong>→ <a href="../annotation/#the-annotate-command-apply">Full Guide</a></strong> — Workflows, modes, best practices, common mistakes</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ai-blame<span class="w"> </span>annotate<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>TARGET<span class="o">]</span>
+</code></pre></div>
+<h4 id="arguments_1">Arguments</h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TARGET</code></td>
+<td>Optional. Filter results to files matching this name (e.g., <code>Asthma.yaml</code>)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="options_2">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory (overrides <code>--dir</code> and <code>--home</code>)</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory where <code>.claude/</code> lives</td>
+</tr>
+<tr>
+<td><code>--config &lt;CONFIG&gt;</code></td>
+<td><code>-c</code></td>
+<td>Auto</td>
+<td>Config file path (auto-find <code>.ai-blame.yaml</code> if present)</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td></td>
+<td>False</td>
+<td>Don't write anything; print what would happen</td>
+</tr>
+<tr>
+<td><code>--initial-and-recent</code></td>
+<td></td>
+<td>False</td>
+<td>Only keep first and last edit per file</td>
+</tr>
+<tr>
+<td><code>--min-change-size &lt;N&gt;</code></td>
+<td><code>-m</code></td>
+<td>0</td>
+<td>Skip intermediate edits smaller than N chars</td>
+</tr>
+<tr>
+<td><code>--pattern &lt;PATTERN&gt;</code></td>
+<td><code>-p</code></td>
+<td><code>""</code></td>
+<td>Filter files by path pattern</td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples_2">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Apply annotations for current directory</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ai-blame<span class="w"> </span>annotate
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Dry run (no writes)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ai-blame<span class="w"> </span>annotate<span class="w"> </span>--dry-run<span class="w"> </span>--initial-and-recent
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Filter to YAML files only</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ai-blame<span class="w"> </span>annotate<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Process specific file (substring match on path)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ai-blame<span class="w"> </span>annotate<span class="w"> </span>config.yaml
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Use custom config</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ai-blame<span class="w"> </span>annotate<span class="w"> </span>--config<span class="w"> </span>/path/to/.ai-blame.yaml
+</code></pre></div>
+<hr />
+<h3 id="ai-blame-stats"><code>ai-blame stats</code></h3>
+<p>Show statistics about available traces.</p>
+<p><strong>→ <a href="../exploration/#the-stats-command">Full Guide</a></strong> — Interpreting statistics, common patterns</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h4 id="options_3">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory where <code>.claude/</code> lives</td>
+</tr>
+<tr>
+<td><code>--pattern &lt;PATTERN&gt;</code></td>
+<td><code>-p</code></td>
+<td><code>""</code></td>
+<td>Filter files by path pattern</td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples_3">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Stats for current directory</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ai-blame<span class="w"> </span>stats
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Stats for specific project</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--dir<span class="w"> </span>/path/to/project
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Stats for YAML files only</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="ai-blame-timeline"><code>ai-blame timeline</code></h3>
+<p>Show a chronological timeline of all file modifications from AI traces.</p>
+<p><strong>→ <a href="../exploration/#the-timeline-command">Full Guide</a></strong> — Understanding timeline, filtering strategies</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h4 id="options_4">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory where <code>.claude/</code> lives</td>
+</tr>
+<tr>
+<td><code>--pattern &lt;PATTERN&gt;</code></td>
+<td><code>-p</code></td>
+<td><code>""</code></td>
+<td>Filter files by path pattern</td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples_4">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Show timeline for current directory</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ai-blame<span class="w"> </span>timeline
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Timeline for YAML files only</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Timeline for specific project</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--dir<span class="w"> </span>/path/to/project
 </code></pre></div>
 <h4 id="output">Output</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Trace directory: /Users/you/.claude/projects/-Users-you-my-project
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Trace files: 12
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Session traces: 8
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Agent traces: 4
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Files with edits (all files): 23
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Total successful edits: 47
+<p>Timeline displays all file modifications in chronological order with:
+- Timestamp (UTC)
+- Action (CREATED, EDITED, DELETED)
+- File path
+- Model used
+- Session/agent information</p>
+<hr />
+<h3 id="ai-blame-blame"><code>ai-blame blame</code></h3>
+<p>Show git-blame-like line (and optional block) attribution for a file in the current working tree.</p>
+<p><strong>→ <a href="../blame-analysis/#the-blame-command">Full Guide</a></strong> — Interpreting output, combining with other commands, edge cases</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>&lt;FILE&gt;
 </code></pre></div>
+<h4 id="arguments_2">Arguments</h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FILE</code></td>
+<td>File to show blame for (path relative to cwd, or absolute)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="options_5">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory (overrides <code>--dir</code> and <code>--home</code>)</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory where <code>.claude/</code> lives</td>
+</tr>
+<tr>
+<td><code>--lines &lt;N-M&gt;</code></td>
+<td></td>
+<td></td>
+<td>Restrict output to a line range like <code>"10-20"</code></td>
+</tr>
+<tr>
+<td><code>--blocks</code></td>
+<td></td>
+<td>False</td>
+<td>Show block boundaries (consecutive lines attributed to the same event)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples_5">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>src/main.rs
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>src/main.rs<span class="w"> </span>--lines<span class="w"> </span><span class="m">10</span>-40
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>src/main.rs<span class="w"> </span>--blocks
+</code></pre></div>
+<hr />
+<h3 id="ai-blame-transcript-list"><code>ai-blame transcript list</code></h3>
+<p>List all transcripts from Claude Code and Codex sessions in the trace directory.</p>
+<p><strong>→ <a href="../exploration/#the-transcript-list-command">Full Guide</a></strong> — Column layouts, filtering, understanding session IDs</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h4 id="options_6">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory (overrides <code>--dir</code> and <code>--home</code>)</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory where <code>.claude/</code> lives</td>
+</tr>
+<tr>
+<td><code>--limit &lt;N&gt;</code></td>
+<td><code>-n</code></td>
+<td>20</td>
+<td>Show N most recent transcripts (0 for all)</td>
+</tr>
+<tr>
+<td><code>--format &lt;table\|json&gt;</code></td>
+<td></td>
+<td><code>table</code></td>
+<td>Output format</td>
+</tr>
+<tr>
+<td><code>--columns &lt;SPEC&gt;</code></td>
+<td></td>
+<td>SATM</td>
+<td>Column layout (see below)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="column-layout-specification">Column Layout Specification</h4>
+<p>Use <code>--columns</code> to customize which columns appear in the table. Each letter represents a column:</p>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Column</th>
+<th>Width</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S</code></td>
+<td>Session ID</td>
+<td>40</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>Agent (claude-code, codex-cli, etc.)</td>
+<td>15</td>
+</tr>
+<tr>
+<td><code>T</code></td>
+<td>Start Time</td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>Message Count</td>
+<td>8</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>Files Touched</td>
+<td>8</td>
+</tr>
+<tr>
+<td><code>O</code></td>
+<td>Models Used</td>
+<td>30</td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>Last Message (preview)</td>
+<td>50</td>
+</tr>
+</tbody>
+</table>
+<p>Example column specs:
+- <code>SATM</code> (default): Session ID, Agent, Timestamp, Messages
+- <code>SATMO</code>: Add Models column
+- <code>SATMOL</code>: Add both Models and Last Message preview
+- <code>ATOM</code>: Agent, Timestamp, Messages, Models (skip Session ID)</p>
+<h4 id="examples_6">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># List 20 most recent transcripts (default)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Show all transcripts with models column</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span><span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Show last message preview for each transcript</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>SATMOL
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># List as JSON (all fields included)</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>json
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Show only agent, time, and model</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>ATO
+</code></pre></div>
+<h4 id="understanding-session-id-duplication">Understanding Session ID Duplication</h4>
+<p>You may notice the same Session ID appearing multiple times in the list. This is normal and occurs in these scenarios:</p>
+<ol>
+<li><strong>Multi-agent sessions</strong>: Claude Code may spawn subagents (Task, Explore, Plan agents, etc.) that share the same parent session ID. Each subagent interaction gets its own trace file.</li>
+<li><strong>Session spanning multiple files</strong>: Long sessions may be split across multiple trace files, each with the same session ID.</li>
+<li><strong>Session file organization</strong>: The system captures relationships between files—each row represents a distinct trace file, not a distinct session.</li>
+</ol>
+<p>The <code>--columns SATMO</code> layout makes this relationship clearer by showing which models were used in each trace file.</p>
+<hr />
+<h3 id="ai-blame-transcript-view"><code>ai-blame transcript view</code></h3>
+<p>Display a detailed transcript of a Claude Code or Codex session.</p>
+<p><strong>→ <a href="../exploration/#the-transcript-view-command">Full Guide</a></strong> — Output formats, workflows, advanced patterns</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>&lt;SESSION&gt;
+</code></pre></div>
+<h4 id="arguments_3">Arguments</h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SESSION</code></td>
+<td>Session ID (substring match), file path, or slug to view</td>
+</tr>
+</tbody>
+</table>
+<h4 id="options_7">Options</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory (overrides <code>--dir</code> and <code>--home</code>)</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory where <code>.claude/</code> lives</td>
+</tr>
+<tr>
+<td><code>--format &lt;text\|markdown\|json&gt;</code></td>
+<td></td>
+<td><code>text</code></td>
+<td>Output format</td>
+</tr>
+<tr>
+<td><code>--full</code></td>
+<td></td>
+<td>False</td>
+<td>Show full content (don't truncate long messages)</td>
+</tr>
+<tr>
+<td><code>--show-thinking</code></td>
+<td></td>
+<td>False</td>
+<td>Display thinking/chain-of-thought blocks</td>
+</tr>
+<tr>
+<td><code>--show-tools</code></td>
+<td></td>
+<td>False</td>
+<td>Display tool use and tool result details</td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples_7">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># View transcript by session ID (substring match)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># View transcript by file path</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>~/.claude/projects/-Users-alice-project/483c7d95.jsonl
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># View with all details visible</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--full<span class="w"> </span>--show-thinking<span class="w"> </span>--show-tools
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Export as markdown for documentation</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>&gt;<span class="w"> </span>session.md
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Export as JSON for programmatic access</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<h4 id="output-formats">Output Formats</h4>
+<p><strong>Text format</strong> (default): Clean, terminal-friendly display with section separators and controlled truncation.</p>
+<p><strong>Markdown format</strong>: GitHub-flavored markdown suitable for documentation, blogs, or GitHub issues. Includes proper code fencing and formatting.</p>
+<p><strong>JSON format</strong>: Machine-readable output with full transcript structure (all fields, no truncation).</p>
+<h4 id="header-information">Header Information</h4>
+<p>The view header includes:
+- <strong>Session ID</strong>: Unique identifier for the interaction
+- <strong>Slug</strong> (if available): Feature flag or task identifier from Claude Code
+- <strong>Agent</strong>: Tool used (claude-code, codex-cli, etc.)
+- <strong>Version</strong>: Agent version that created the trace
+- <strong>Working Directory</strong>: Directory where the agent was running
+- <strong>Trace File</strong>: Path to the source trace file
+- <strong>Start/End</strong>: Timestamps of the session
+- <strong>Messages</strong>: Total message count
+- <strong>Files Touched</strong>: Number of files modified</p>
 <hr />
 <h2 id="trace-directory-resolution">Trace Directory Resolution</h2>
 <p>The trace directory is determined by (in order of priority):</p>
@@ -1478,7 +3121,7 @@
 <li><strong><code>--dir</code> + <code>--home</code></strong>: Compute as <code>$home/.claude/projects/&lt;encoded-dir&gt;/</code></li>
 <li><strong>Default</strong>: <code>~/.claude/projects/&lt;encoded-cwd&gt;/</code></li>
 </ol>
-<p>The <code>&lt;encoded-dir&gt;</code> is the directory path with <code>/</code> replaced by <code>-</code>.</p>
+<p>The <code>&lt;encoded-dir&gt;</code> is a filesystem-safe encoding of the absolute path (at minimum, path separators like <code>/</code> become <code>-</code>, and punctuation like <code>.</code> is also normalized to <code>-</code> in practice).</p>
 <p><strong>Example:</strong></p>
 <table>
 <thead>
@@ -1499,6 +3142,37 @@
 </tbody>
 </table>
 <hr />
+<h3 id="ai-blame-completions"><code>ai-blame completions</code></h3>
+<p>Generate shell completion scripts for tab completion support.</p>
+<p><strong>→ <a href="../../how-to/shell-completions/">Full Guide</a></strong> — Installation instructions for all shells</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ai-blame<span class="w"> </span>completions<span class="w"> </span>&lt;SHELL&gt;
+</code></pre></div>
+<h4 id="arguments_4">Arguments</h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SHELL</code></td>
+<td>Shell to generate completions for: <code>bash</code>, <code>zsh</code>, <code>fish</code>, <code>elvish</code>, <code>powershell</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="examples_8">Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Generate zsh completions (for Oh My Zsh)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ai-blame<span class="w"> </span>completions<span class="w"> </span>zsh<span class="w"> </span>&gt;<span class="w"> </span>~/.oh-my-zsh/completions/_ai-blame
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Generate bash completions</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>ai-blame<span class="w"> </span>completions<span class="w"> </span>bash<span class="w"> </span>&gt;<span class="w"> </span>/etc/bash_completion.d/ai-blame
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Generate fish completions</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>ai-blame<span class="w"> </span>completions<span class="w"> </span>fish<span class="w"> </span>&gt;<span class="w"> </span>~/.config/fish/completions/ai-blame.fish
+</code></pre></div>
+<hr />
 <h2 id="exit-codes">Exit Codes</h2>
 <table>
 <thead>
@@ -1516,16 +3190,12 @@
 <td>1</td>
 <td>Error (e.g., trace directory not found, file not found)</td>
 </tr>
+<tr>
+<td>2</td>
+<td>CLI usage error (e.g., invalid <code>--lines</code> range)</td>
+</tr>
 </tbody>
 </table>
-<hr />
-<h2 id="environment">Environment</h2>
-<p><code>ai-blame</code> uses:</p>
-<ul>
-<li>Current working directory for default trace lookup</li>
-<li>User's home directory (<code>~</code>) for default <code>.claude/</code> location</li>
-<li><code>.ai-blame.yaml</code> configuration if present (searched upward from cwd)</li>
-</ul>
 
 
 

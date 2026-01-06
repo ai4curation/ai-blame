@@ -6,21 +6,21 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Extract provenance from AI agent execution traces">
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
       
       
       
-        <link rel="canonical" href="https://ai4curation.github.io/ai-blame/explanation/related-tools/">
+      
+        <link rel="prev" href="../codex-traces/">
       
       
-        <link rel="prev" href="../trace-format/">
-      
+        <link rel="next" href="../../faqs/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/ai-blame-logo.png">
+      <link rel="icon" href="../../assets/favicon.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
@@ -197,7 +197,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
       </div>
@@ -242,7 +242,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
     </div>
@@ -329,6 +329,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -482,6 +510,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../how-to/column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../how-to/file-types/" class="md-nav__link">
         
   
@@ -510,6 +566,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../how-to/shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../how-to/test-data/" class="md-nav__link">
         
   
@@ -518,6 +602,62 @@
     
   
     Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/tauri-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
   
 
     
@@ -599,6 +739,174 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/cli/" class="md-nav__link">
         
   
@@ -606,7 +914,7 @@
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    CLI Syntax Reference
   
 
     
@@ -800,6 +1108,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../trace-format/" class="md-nav__link">
         
   
@@ -808,6 +1144,62 @@
     
   
     Trace Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
   
 
     
@@ -911,28 +1303,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-strengths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Strengths
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#comparison-with-ai-blame" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -948,117 +1318,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#when-to-use-which" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to Use Which
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="When to Use Which">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#use-git-ai-when" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use git-ai when:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-ai-blame-when" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use ai-blame when:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#complementary-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Complementary Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#other-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Other Approaches
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Other Approaches">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manual-attribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual Attribution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ai-watermarking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Watermarking
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#trace-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trace Logging
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-future" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Future
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1071,6 +1330,60 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faqs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1125,28 +1438,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-strengths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Strengths
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#comparison-with-ai-blame" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1159,117 +1450,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-use-which" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to Use Which
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="When to Use Which">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#use-git-ai-when" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use git-ai when:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-ai-blame-when" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use ai-blame when:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#complementary-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Complementary Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#other-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Other Approaches
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Other Approaches">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manual-attribution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual Attribution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ai-watermarking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Watermarking
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#trace-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trace Logging
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-future" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Future
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1301,25 +1481,6 @@
 <h2 id="git-ai">git-ai</h2>
 <p><strong>Website</strong>: <a href="https://usegitai.com/docs/how-git-ai-works">usegitai.com</a></p>
 <p><a href="https://usegitai.com">git-ai</a> takes a git-native approach to AI attribution. Rather than modifying files, it extends git's metadata system.</p>
-<h3 id="how-it-works">How It Works</h3>
-<ol>
-<li>
-<p><strong>Checkpoints</strong>: As you code with AI tools (Cursor, Claude Code, Copilot), git-ai creates temporary records in <code>.git/ai</code> marking which changes are AI-generated vs human-authored.</p>
-</li>
-<li>
-<p><strong>Authorship Logs</strong>: At commit time, checkpoints become optimized logs mapping line ranges to their AI origin, stored as <a href="https://git-scm.com/docs/git-notes">git notes</a>.</p>
-</li>
-<li>
-<p><strong>Blame Integration</strong>: Overlays AI authorship onto standard <code>git blame</code>, showing not just who last modified a line, but whether it originated from an AI.</p>
-</li>
-</ol>
-<h3 id="key-strengths">Key Strengths</h3>
-<ul>
-<li><strong>Line-level granularity</strong>: Tracks individual lines, not just files</li>
-<li><strong>Survives git operations</strong>: Rebases, merges, and cherry-picks preserve attribution</li>
-<li><strong>Vendor neutral</strong>: Supports multiple AI tools</li>
-<li><strong>Non-invasive</strong>: Metadata stays in <code>.git/</code>, files remain unchanged</li>
-</ul>
 <h3 id="comparison-with-ai-blame">Comparison with ai-blame</h3>
 <table>
 <thead>
@@ -1333,7 +1494,7 @@
 <tr>
 <td><strong>Granularity</strong></td>
 <td>Line-level</td>
-<td>File-level</td>
+<td>File-level (plus <code>ai-blame blame</code> for a best-effort view)</td>
 </tr>
 <tr>
 <td><strong>Storage</strong></td>
@@ -1357,61 +1518,6 @@
 </tr>
 </tbody>
 </table>
-<h2 id="when-to-use-which">When to Use Which</h2>
-<h3 id="use-git-ai-when">Use git-ai when:</h3>
-<ul>
-<li>You need line-level attribution in code</li>
-<li>You want attribution to survive complex git workflows</li>
-<li>You prefer keeping files unchanged</li>
-<li>You're working in a typical software development context</li>
-</ul>
-<h3 id="use-ai-blame-when">Use ai-blame when:</h3>
-<ul>
-<li>You're curating knowledge bases or structured data (YAML, JSON)</li>
-<li>You want provenance embedded directly in files</li>
-<li>Files are distributed outside git (exports, APIs, publications)</li>
-<li>You need to extract provenance retroactively from existing traces</li>
-<li>You want history visible without special tooling</li>
-</ul>
-<h2 id="complementary-usage">Complementary Usage</h2>
-<p>The tools can complement each other:</p>
-<ul>
-<li>Use <strong>git-ai</strong> for your source code during development</li>
-<li>Use <strong>ai-blame</strong> for knowledge base files that get published or distributed</li>
-</ul>
-<p>For example, in a biomedical ontology project:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>project/
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── src/                    # git-ai tracks code
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   └── validators.py
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── kb/                     # ai-blame embeds history
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    └── diseases/
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        └── Asthma.yaml     # Contains edit_history
-</code></pre></div>
-<h2 id="other-approaches">Other Approaches</h2>
-<h3 id="manual-attribution">Manual Attribution</h3>
-<p>Some teams add comments or commit message conventions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># AI-generated: Claude, 2025-01-15</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_statistics</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="o">...</span>
-</code></pre></div>
-<p><strong>Pros</strong>: Simple, no tooling required
-<strong>Cons</strong>: Manual, inconsistent, doesn't scale</p>
-<h3 id="ai-watermarking">AI Watermarking</h3>
-<p>Some AI providers embed invisible watermarks in generated text.</p>
-<p><strong>Pros</strong>: Automatic, detectable
-<strong>Cons</strong>: Can be stripped, not structured, privacy concerns</p>
-<h3 id="trace-logging">Trace Logging</h3>
-<p>Tools like <a href="https://smith.langchain.com/">LangSmith</a> log AI interactions for debugging and monitoring.</p>
-<p><strong>Pros</strong>: Rich context, debugging value
-<strong>Cons</strong>: Separate from files, requires infrastructure</p>
-<h2 id="the-future">The Future</h2>
-<p>As AI assistance becomes ubiquitous, we expect:</p>
-<ul>
-<li><strong>Standardization</strong>: Common formats for AI provenance metadata</li>
-<li><strong>Integration</strong>: IDEs and git hosts surfacing AI attribution natively</li>
-<li><strong>Regulation</strong>: Requirements for AI disclosure in certain domains</li>
-</ul>
-<p>Both git-ai and ai-blame represent early attempts to build this infrastructure. The right tool depends on your workflow and what you're building.</p>
 
 
 

@@ -6,21 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Extract provenance from AI agent execution traces">
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
       
       
       
-        <link rel="canonical" href="https://ai4curation.github.io/ai-blame/">
       
       
-      
-        <link rel="next" href="tutorials/getting-started/">
+        <link rel="next" href="tutorials/quickstart/">
       
       
         
       
       
-      <link rel="icon" href="assets/ai-blame-logo.png">
+      <link rel="icon" href="assets/favicon.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
@@ -197,7 +195,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
       </div>
@@ -242,7 +240,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    ai4curation/ai-blame
   </div>
 </a>
     </div>
@@ -316,6 +314,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#quick-command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Command Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-is-ai-blame" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -327,13 +347,130 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-example" class="md-nav__link">
+  <a href="#typical-workflows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Example
+        Typical Workflows
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Typical Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exploration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Exploration Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Exploration Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-overview-of-traces-and-edits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview of Traces and Edits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-see-timeline-of-all-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. See Timeline of All Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-list-and-review-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. List and Review Sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-explore-a-specific-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Explore a Specific Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💾 Annotation Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💾 Annotation Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-show-line-by-line-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Show Line-by-Line Attribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-preview-provenance-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Preview Provenance Report
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-embed-provenance-in-your-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Embed Provenance in Your Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -342,6 +479,17 @@
     <span class="md-ellipsis">
       
         Key Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop App
       
     </span>
   </a>
@@ -371,13 +519,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#documentation-learning-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Documentation &amp; Learning Paths
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Documentation &amp; Learning Paths">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-to-ai-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 New to ai-blame?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-by-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Learning by Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-the-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Understanding the System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faqs-community" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💬 FAQs &amp; Community
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -442,6 +640,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -595,6 +821,34 @@
   
   
     <li class="md-nav__item">
+      <a href="how-to/column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="how-to/file-types/" class="md-nav__link">
         
   
@@ -623,6 +877,34 @@
   
   
     <li class="md-nav__item">
+      <a href="how-to/shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="how-to/test-data/" class="md-nav__link">
         
   
@@ -631,6 +913,62 @@
     
   
     Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="how-to/performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="how-to/tauri-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
   
 
     
@@ -712,6 +1050,174 @@
   
   
     <li class="md-nav__item">
+      <a href="reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/exploration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="reference/cli/" class="md-nav__link">
         
   
@@ -719,7 +1225,7 @@
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    CLI Syntax Reference
   
 
     
@@ -913,6 +1419,34 @@
   
   
     <li class="md-nav__item">
+      <a href="explanation/transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="explanation/trace-format/" class="md-nav__link">
         
   
@@ -921,6 +1455,62 @@
     
   
     Trace Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="explanation/claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="explanation/codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
   
 
     
@@ -969,6 +1559,60 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="faqs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -996,6 +1640,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#quick-command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Command Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-is-ai-blame" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1007,13 +1673,130 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-example" class="md-nav__link">
+  <a href="#typical-workflows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Example
+        Typical Workflows
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Typical Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exploration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Exploration Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Exploration Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-overview-of-traces-and-edits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview of Traces and Edits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-see-timeline-of-all-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. See Timeline of All Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-list-and-review-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. List and Review Sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-explore-a-specific-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Explore a Specific Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💾 Annotation Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💾 Annotation Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-show-line-by-line-attribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Show Line-by-Line Attribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-preview-provenance-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Preview Provenance Report
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-embed-provenance-in-your-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Embed Provenance in Your Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1022,6 +1805,17 @@
     <span class="md-ellipsis">
       
         Key Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop App
       
     </span>
   </a>
@@ -1051,13 +1845,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#documentation-learning-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Documentation &amp; Learning Paths
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Documentation &amp; Learning Paths">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-to-ai-blame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 New to ai-blame?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-by-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Learning by Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-the-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Understanding the System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faqs-community" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💬 FAQs &amp; Community
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1082,54 +1926,177 @@
 
 
 <p align="center">
-  <img src="assets/ai-blame-logo.png" alt="ai-blame logo" width="200">
+  <img src="assets/ai-blame-hero.png" alt="git blame shows who committed, ai-blame shows which AI generated the code" width="800">
 </p>
 
 <h1 id="ai-blame">ai-blame</h1>
 <p><strong>Extract provenance from AI agent execution traces.</strong></p>
-<p>Like <code>git blame</code>, but for AI-assisted edits.</p>
+<p>Like <code>git blame</code>, but for AI-assisted edits. See which AI model wrote each line of code.</p>
+<hr />
+<h2 id="quick-command-reference">Quick Command Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What It Does</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>init</code></td>
+<td>Create starter config</td>
+<td>First-time setup</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>Show trace statistics</td>
+<td>Discover available traces</td>
+</tr>
+<tr>
+<td><code>timeline</code></td>
+<td>Chronological edit timeline</td>
+<td>Understand project history</td>
+</tr>
+<tr>
+<td><code>transcript</code></td>
+<td>Explore AI sessions</td>
+<td>Review agent conversations</td>
+</tr>
+<tr>
+<td><code>blame</code></td>
+<td>Line-by-line attribution</td>
+<td>See who edited what</td>
+</tr>
+<tr>
+<td><code>report</code></td>
+<td>Preview provenance</td>
+<td>Dry-run before annotating</td>
+</tr>
+<tr>
+<td><code>annotate</code></td>
+<td>Embed provenance</td>
+<td>Apply changes to files</td>
+</tr>
+</tbody>
+</table>
+<p><strong>→</strong> <a href="reference/">Full Command Index</a> | <strong>→</strong> <a href="tutorials/quickstart/">Quickstart</a></p>
+<hr />
+<h2 id="demo">Demo</h2>
+<p>Watch a complete walkthrough of all commands in action:</p>
+<p><a href="https://asciinema.org/a/765613"><img alt="asciicast" src="https://asciinema.org/a/765613.svg" /></a></p>
+<p>The demo shows setup, discovery (stats, timeline, transcripts), line-level blame analysis (the centerpiece), and annotation workflows using real traces from ai-blame development (80 traces, 378 edits).</p>
 <hr />
 <h2 id="what-is-ai-blame">What is ai-blame?</h2>
 <p>As AI agents increasingly assist with knowledge base curation, documentation, and code generation, we need to track <strong>provenance</strong> — which agent/model made what changes, when, and why.</p>
-<p><code>ai-blame</code> mines execution traces from AI coding assistants (currently Claude Code) and extracts a structured audit trail of file modifications. This history can be:</p>
+<p><code>ai-blame</code> parses execution traces from AI coding assistants (Claude Code, GitHub Copilot, and others) and extracts a structured audit trail of file modifications. This history can be:</p>
 <ul>
 <li><strong>Appended</strong> directly to YAML/JSON files as a <code>edit_history</code> section</li>
 <li><strong>Written</strong> to sidecar files (e.g., <code>foo.history.yaml</code>)</li>
 <li><strong>Embedded</strong> as comments in code files</li>
 </ul>
-<h2 id="quick-example">Quick Example</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># See what traces are available</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ai-blame<span class="w"> </span>stats
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Preview what would be added (dry run)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--initial-and-recent
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Actually apply changes</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ai-blame<span class="w"> </span>mine<span class="w"> </span>--apply<span class="w"> </span>--initial-and-recent
+<h2 id="typical-workflows">Typical Workflows</h2>
+<h3 id="exploration-workflow">📊 Exploration Workflow</h3>
+<p><strong>Commands:</strong> <code>stats</code> → <code>timeline</code> → <code>transcript list</code> → <code>transcript view</code></p>
+<p>Start by discovering what traces and edits are available:</p>
+<h4 id="1-overview-of-traces-and-edits">1. Overview of Traces and Edits</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>stats
 </code></pre></div>
-<p>This produces output like:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ... existing file content ...</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">edit_history</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2025-12-01T08:03:42+00:00&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-5-20251101</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">agent_tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">agent_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2.0.75&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CREATED</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2025-12-15T20:34:29+00:00&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-opus-4-5-20251101</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">agent_tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nt">agent_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2.1.0&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EDITED</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Trace directory: /Users/alice/.claude/projects/-Users-alice-myproject/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Trace files: 5
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Session traces: 3
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Agent traces: 2
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Files with edits (all files): 23
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Total successful edits: 47
+</code></pre></div>
+<h4 id="2-see-timeline-of-all-actions">2. See Timeline of All Actions</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>timeline
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>=== Timeline of Actions ===
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2025-12-01 08:03:42 UTC  [CREATED]  disease_definitions.yaml (claude-opus-4-5)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2025-12-01 08:05:18 UTC  [EDITED]   disease_definitions.yaml (claude-opus-4-5)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2025-12-02 14:12:15 UTC  [CREATED]  phenotypes.yaml (gpt-4)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>...
+</code></pre></div>
+<h4 id="3-list-and-review-sessions">3. List and Review Sessions</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>SATMO
+</code></pre></div>
+<p>Shows all Claude Code and Codex sessions with models used in each:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Session ID                               Agent           Start Time             Msgs     Models
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a    claude-code     2025-12-01 03:56         53      claude-opus-4-5
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a    claude-code     2025-12-01 03:55          2      claude-haiku
+</code></pre></div>
+<p>See <a href="explanation/transcripts-and-subagents/">Understanding Session ID Duplication</a> to learn why the same Session ID appears multiple times (subagent sessions).</p>
+<h4 id="4-explore-a-specific-session">4. Explore a Specific Session</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--full<span class="w"> </span>--show-thinking
+</code></pre></div>
+<p>Shows the complete session transcript with all messages, reasoning, and tool use.</p>
+<h3 id="annotation-workflow">💾 Annotation Workflow</h3>
+<p><strong>Commands:</strong> <code>report</code> → <code>annotate</code> (with <code>--dry-run</code> preview pattern)</p>
+<p>Extract and embed provenance into your project files:</p>
+<h4 id="1-show-line-by-line-attribution">1. Show Line-by-Line Attribution</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>blame<span class="w"> </span>src/main.rs
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>     1  claude-opus-4-5    fn process_data(input: &amp;str) -&gt; Result&lt;Vec&lt;Item&gt;&gt; {
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>     2  claude-opus-4-5    let items = parse_input(input)?;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>     3  claude-opus-4-5
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>     4  claude-opus-4-5    items.iter()
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>     5  claude-opus-4-5        .filter(|item| item.is_valid())
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>     6  claude-3-5-sonnet   .map(|item| transform(item))
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>     7  claude-3-5-sonnet   .collect()
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>     8  claude-opus-4-5    }
+</code></pre></div>
+<p>Use <code>--blocks</code> to group consecutive lines from the same model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>blame<span class="w"> </span>src/main.rs<span class="w"> </span>--blocks
+</code></pre></div>
+<h4 id="2-preview-provenance-report">2. Preview Provenance Report</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>report<span class="w"> </span>--initial-and-recent
+</code></pre></div>
+<p>Shows what <code>edit_history</code> would be added to each file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Processing: disease_definitions.yaml
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Edits for disease_definitions.yaml:
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  [CREATED] 2025-12-01 08:03:42 UTC
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    Model: claude-opus-4-5-20251101
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    Agent: claude-code (v2.0.75)
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  [EDITED] 2025-12-15 20:34:29 UTC
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    Model: claude-opus-4-5-20251101
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    Agent: claude-code (v2.1.0)
+</code></pre></div>
+<h4 id="3-embed-provenance-in-your-files">3. Embed Provenance in Your Files</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>annotate<span class="w"> </span>--initial-and-recent<span class="w"> </span>--dry-run
+</code></pre></div>
+<p>Preview the changes, then apply with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>$<span class="w"> </span>ai-blame<span class="w"> </span>annotate<span class="w"> </span>--initial-and-recent<span class="w">  </span><span class="c1"># Writes to files</span>
 </code></pre></div>
 <h2 id="key-features">Key Features</h2>
 <ul>
-<li><strong>Automatic trace discovery</strong> — Finds Claude Code traces based on your current directory</li>
+<li><strong>Line-level blame</strong> — <code>ai-blame blame</code> shows git-blame-style attribution for each line in a file</li>
+<li><strong>Desktop UI</strong> — Visual blame viewer, timeline, and transcript explorer</li>
+<li><strong>Automatic trace discovery</strong> — Finds execution traces from multiple AI agents</li>
 <li><strong>Configurable output policies</strong> — Append, sidecar, or comment-based history</li>
 <li><strong>Flexible filtering</strong> — By file pattern, change size, or time range</li>
 <li><strong>Dry-run by default</strong> — Preview changes before applying</li>
 <li><strong>Multiple file type support</strong> — YAML, JSON, Python, and more</li>
 </ul>
+<hr />
+<h2 id="desktop-app">Desktop App</h2>
+<p>For visual exploration, the desktop app provides an interactive interface for browsing AI-assisted edits.</p>
+<p><img alt="Desktop App - Blame Viewer" src="assets/screenshots/ui-blame-view.png" /></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>Blame Viewer</strong> — Browse files with line-by-line AI attribution</li>
+<li><strong>Timeline</strong> — Chronological view of all AI edits with navigation</li>
+<li><strong>Transcripts</strong> — Search and explore AI conversation sessions</li>
+<li><strong>Settings</strong> — Configure project paths and caching options</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Run the desktop app</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">cd</span><span class="w"> </span>src-tauri<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cargo<span class="w"> </span>run<span class="w"> </span>--release
+</code></pre></div>
+<p><strong>→</strong> <a href="how-to/tauri-app/">Desktop App Documentation</a></p>
 <h2 id="supported-trace-sources">Supported Trace Sources</h2>
 <table>
 <thead>
@@ -1144,8 +2111,8 @@
 <td>✅ Supported</td>
 </tr>
 <tr>
-<td>OpenAI Codex</td>
-<td>🔜 Planned</td>
+<td>OpenAI Codex / GitHub Copilot</td>
+<td>✅ Supported</td>
 </tr>
 <tr>
 <td>Others (Cursor, Aider, etc.)</td>
@@ -1154,15 +2121,18 @@
 </tbody>
 </table>
 <h2 id="installation">Installation</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Using uv (recommended)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ai-blame
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or from source</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ai4curation/ai-blame
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">cd</span><span class="w"> </span>ai-blame
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>uv<span class="w"> </span>sync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ai4curation/ai-blame
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">cd</span><span class="w"> </span>ai-blame
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Build with cargo</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>cargo<span class="w"> </span>build<span class="w"> </span>--release
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Optionally install it</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>cargo<span class="w"> </span>install<span class="w"> </span>--path<span class="w"> </span>.
 </code></pre></div>
-<h2 id="next-steps">Next Steps</h2>
+<h2 id="documentation-learning-paths">Documentation &amp; Learning Paths</h2>
+<h3 id="new-to-ai-blame">🚀 New to ai-blame?</h3>
+<p>Start here:</p>
 <table>
 <thead>
 <tr>
@@ -1172,20 +2142,119 @@
 </thead>
 <tbody>
 <tr>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong><a href="tutorials/getting-started/">Getting Started</a></strong></td>
-<td>New to ai-blame? Start here for a hands-on tutorial.</td>
+<td><strong><a href="tutorials/quickstart/">Quickstart</a></strong></td>
+<td>5-minute guide with the most common commands. Perfect for busy people!</td>
 </tr>
 <tr>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg></span> <strong><a href="how-to/configuration/">Configuration</a></strong></td>
-<td>Learn how to customize output policies for different file types.</td>
+<td><strong><a href="tutorials/getting-started/">Getting Started</a></strong></td>
+<td>Comprehensive hands-on tutorial: install, scan traces, annotate files.</td>
 </tr>
 <tr>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 19V7H4v12zm0-16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-7 14v-2h5v2zm-3.42-4L5.57 9H8.4l3.3 3.3c.39.39.39 1.03 0 1.42L8.42 17H5.59z"/></svg></span> <strong><a href="reference/cli/">CLI Reference</a></strong></td>
-<td>Complete reference for all commands and options.</td>
+<td><strong><a href="reference/">Command Index</a></strong></td>
+<td>Visual overview of all 7 commands with task-to-command mapping.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="learning-by-task">📚 Learning by Task</h3>
+<p>Find what you need:</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Understand sessions &amp; subagents</strong></td>
+<td><a href="explanation/transcripts-and-subagents/">Transcripts &amp; Subagents</a></td>
 </tr>
 <tr>
-<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg></span> <strong><a href="explanation/philosophy/">Philosophy</a></strong></td>
-<td>Understand why provenance tracking matters.</td>
+<td><strong>Explore traces</strong></td>
+<td><a href="reference/exploration/">Trace Exploration</a> (stats, timeline, transcript)</td>
+</tr>
+<tr>
+<td><strong>Annotate files with provenance</strong></td>
+<td><a href="reference/annotation/">Provenance Annotation</a> (report, annotate)</td>
+</tr>
+<tr>
+<td><strong>Set up configuration</strong></td>
+<td><a href="reference/setup/">Setup &amp; Configuration</a> (init command)</td>
+</tr>
+<tr>
+<td><strong>Analyze line changes</strong></td>
+<td><a href="reference/blame-analysis/">Line-Level Analysis</a> (blame command)</td>
+</tr>
+<tr>
+<td><strong>Optimize performance</strong></td>
+<td><a href="reference/performance/">Performance</a> (caching, filters)</td>
+</tr>
+<tr>
+<td><strong>Configure output formats</strong></td>
+<td><a href="how-to/configuration/">Configuration Guide</a></td>
+</tr>
+<tr>
+<td><strong>Handle different file types</strong></td>
+<td><a href="how-to/file-types/">File Types</a></td>
+</tr>
+<tr>
+<td><strong>Customize display columns</strong></td>
+<td><a href="how-to/column-layouts/">Column Layouts</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="understanding-the-system">🔍 Understanding the System</h3>
+<p>Deep technical details:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="explanation/how-it-works/">How It Works</a></strong></td>
+<td>Architecture overview: trace parsing, edit extraction, and blame computation.</td>
+</tr>
+<tr>
+<td><strong><a href="explanation/trace-format/">Trace Format</a></strong></td>
+<td>How execution traces are structured and parsed.</td>
+</tr>
+<tr>
+<td><strong><a href="explanation/claude-traces/">Claude Traces</a></strong></td>
+<td>Technical details on Claude Code trace format.</td>
+</tr>
+<tr>
+<td><strong><a href="explanation/codex-traces/">Codex Traces</a></strong></td>
+<td>Technical details on GitHub Copilot/Codex trace format.</td>
+</tr>
+<tr>
+<td><strong><a href="explanation/philosophy/">Philosophy</a></strong></td>
+<td>Why provenance tracking matters for AI-assisted curation.</td>
+</tr>
+<tr>
+<td><strong><a href="reference/cli/">CLI Syntax Reference</a></strong></td>
+<td>Complete command syntax and options reference.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="faqs-community">💬 FAQs &amp; Community</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="faqs/">FAQs</a></strong></td>
+<td>Answers to common questions about installation, usage, and troubleshooting.</td>
+</tr>
+<tr>
+<td><strong><a href="https://github.com/ai4curation/ai-blame/blob/main/CONTRIBUTING.md">Contributing</a></strong></td>
+<td>Want to help? See how to contribute code, documentation, and test cases.</td>
 </tr>
 </tbody>
 </table>

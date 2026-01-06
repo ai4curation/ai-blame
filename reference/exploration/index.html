@@ -1,0 +1,3563 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Extract provenance from AI agent execution traces (Rust port)">
+      
+      
+      
+      
+        <link rel="prev" href="../annotation/">
+      
+      
+        <link rel="next" href="../blame-analysis/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Trace Exploration - ai-blame</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#trace-exploration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ai-blame" class="md-header__button md-logo" aria-label="ai-blame" data-md-component="logo">
+      
+  <img src="../../assets/ai-blame-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ai-blame
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Trace Exploration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ai4curation/ai-blame" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ai4curation/ai-blame
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ai-blame" class="md-nav__button md-logo" aria-label="ai-blame" data-md-component="logo">
+      
+  <img src="../../assets/ai-blame-logo.png" alt="logo">
+
+    </a>
+    ai-blame
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ai4curation/ai-blame" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ai4curation/ai-blame
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/python-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Output Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/column-layouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Column Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/file-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle Different File Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/shell-completions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shell Completions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/test-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Test Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/performance-and-caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/tauri-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desktop App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-stats-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The stats Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The stats Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting Stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-timeline-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The timeline Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The timeline Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-transcript-list-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The transcript list Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The transcript list Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-default-output-satm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Default Output (SATM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-with-models-satmo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: With Models (SATMO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#column-layout-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Layout Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-session-id-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Session ID Duplication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-transcript-view-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The transcript view Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The transcript view Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-output_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-exploration-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Exploration Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Exploration Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-project-overview-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Project Overview (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-session-discovery-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Session Discovery (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-understanding-subagents-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Understanding Subagents (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-file-history-3-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: File History (3 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-and-searching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering and Searching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtering and Searching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-file-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by File Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-sessions-with-specific-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Sessions with Specific Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show-latest-n-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Show Latest N Sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-session-as-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Session as Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#programmatic-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compare-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compare Sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpreting-session-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting Session Information
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpreting Session Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#session-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start Time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-touched" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files Touched
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips &amp; Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tips &amp; Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tip-1-start-with-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 1: Start with Stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tip-2-use-models-to-identify-subagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 2: Use Models to Identify Subagents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tip-3-export-before-archiving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 3: Export Before Archiving
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tip-4-combine-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 4: Combine Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-traces-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No traces found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-id-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session ID not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-truncated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output truncated
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Topics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blame-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Line-Level Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config-file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How It Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/transcripts-and-subagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding Subagents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/trace-format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/claude-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/codex-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/related-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faqs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-stats-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The stats Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The stats Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting Stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-timeline-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The timeline Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The timeline Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-transcript-list-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The transcript list Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The transcript list Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-default-output-satm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Default Output (SATM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-with-models-satmo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: With Models (SATMO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#column-layout-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Layout Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-session-id-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Session ID Duplication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-transcript-view-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The transcript view Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The transcript view Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-output_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-exploration-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Exploration Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Exploration Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-project-overview-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Project Overview (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-session-discovery-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Session Discovery (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-understanding-subagents-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Understanding Subagents (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-file-history-3-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: File History (3 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-and-searching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering and Searching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtering and Searching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-file-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by File Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-sessions-with-specific-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Sessions with Specific Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show-latest-n-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Show Latest N Sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-session-as-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Session as Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#programmatic-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compare-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compare Sessions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpreting-session-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting Session Information
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interpreting Session Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#session-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start Time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-touched" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files Touched
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips &amp; Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tips &amp; Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tip-1-start-with-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 1: Start with Stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tip-2-use-models-to-identify-subagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 2: Use Models to Identify Subagents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tip-3-export-before-archiving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 3: Export Before Archiving
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tip-4-combine-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip 4: Combine Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-traces-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No traces found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-id-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session ID not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-truncated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output truncated
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Topics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="trace-exploration">Trace Exploration</h1>
+<p>Discover, understand, and explore AI agent execution traces in your project.</p>
+<hr />
+<h2 id="conceptual-model">Conceptual Model</h2>
+<p><strong>Trace exploration</strong> answers: "What traces exist? What changed? What did the AI do?"</p>
+<p>Four commands work together in a discovery workflow:</p>
+<ol>
+<li><strong><code>stats</code></strong> — Quick overview: How many traces? How many edits?</li>
+<li><strong><code>timeline</code></strong> — Chronological history: What changed when?</li>
+<li><strong><code>transcript list</code></strong> — See all AI sessions: Who worked on this?</li>
+<li><strong><code>transcript view</code></strong> — Deep dive: What did a specific session do?</li>
+</ol>
+<p>Each answers progressively more detailed questions.</p>
+<hr />
+<h2 id="the-stats-command">The <code>stats</code> Command</h2>
+<h3 id="what-it-does">What It Does</h3>
+<p>Shows statistics about available traces and edits. Answers: "What do I have to work with?"</p>
+<h3 id="command-syntax">Command Syntax</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h3 id="basic-usage">Basic Usage</h3>
+<p><strong>Show all traces:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ai-blame<span class="w"> </span>stats
+</code></pre></div>
+<p><strong>For a specific project:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--dir<span class="w"> </span>/path/to/project
+</code></pre></div>
+<h3 id="options">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory for trace lookup</td>
+</tr>
+<tr>
+<td><code>--pattern &lt;PATTERN&gt;</code></td>
+<td><code>-p</code></td>
+<td><code>""</code></td>
+<td>Filter files by path pattern</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-output">Example Output</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$ ai-blame stats
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Trace directory: /Users/alice/.claude/projects/-Users-alice-myproject/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Trace files: 5
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Session traces: 3
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Agent traces: 2
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Files with edits (all files): 23
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Total successful edits: 47
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Top edited files:
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  1. disease_definitions.yaml (8 edits)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  2. phenotypes.yaml (6 edits)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  3. config.yaml (5 edits)
+</code></pre></div>
+<h3 id="interpreting-stats">Interpreting Stats</h3>
+<ul>
+<li><strong>Trace files:</strong> Number of recorded sessions (.jsonl files)</li>
+<li><strong>Session traces:</strong> Parent Claude Code/Codex sessions</li>
+<li><strong>Agent traces:</strong> Subagent sessions (spawned by parent)</li>
+<li><strong>Files with edits:</strong> How many unique files were modified</li>
+<li><strong>Total edits:</strong> Sum of all CREATE/EDIT/DELETE operations</li>
+</ul>
+<hr />
+<h2 id="the-timeline-command">The <code>timeline</code> Command</h2>
+<h3 id="what-it-does_1">What It Does</h3>
+<p>Shows a chronological timeline of all file modifications from traces. Answers: "What changed when?"</p>
+<h3 id="command-syntax_1">Command Syntax</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h3 id="basic-usage_1">Basic Usage</h3>
+<p><strong>Show complete timeline:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ai-blame<span class="w"> </span>timeline
+</code></pre></div>
+<p><strong>Filter by file type:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+</code></pre></div>
+<h3 id="options_1">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory for trace lookup</td>
+</tr>
+<tr>
+<td><code>--pattern &lt;PATTERN&gt;</code></td>
+<td><code>-p</code></td>
+<td><code>""</code></td>
+<td>Filter files by path pattern</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-output_1">Example Output</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$ ai-blame timeline
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>=== Timeline of Actions ===
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>2025-12-01 08:03:42 UTC  [CREATED]  disease_definitions.yaml (claude-opus-4-5)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>2025-12-01 08:05:18 UTC  [EDITED]   disease_definitions.yaml (claude-opus-4-5)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>2025-12-02 14:12:15 UTC  [CREATED]  phenotypes.yaml (gpt-4)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>2025-12-02 14:15:30 UTC  [EDITED]   config.yaml (claude-opus-4-5)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>2025-12-05 10:22:05 UTC  [EDITED]   disease_definitions.yaml (claude-3-5-sonnet)
+</code></pre></div>
+<h3 id="understanding-timeline">Understanding Timeline</h3>
+<ul>
+<li><strong>Timestamp</strong> (UTC) — When the edit occurred</li>
+<li><strong>Action</strong> — CREATED, EDITED, or DELETED</li>
+<li><strong>File</strong> — Which file was affected</li>
+<li><strong>Model</strong> — Which AI model made the change</li>
+</ul>
+<p>Use timeline to:
+- See project evolution chronologically
+- Identify when each file was first created
+- Spot patterns (which files change together?)
+- Check if models changed over time</p>
+<hr />
+<h2 id="the-transcript-list-command">The <code>transcript list</code> Command</h2>
+<h3 id="what-it-does_2">What It Does</h3>
+<p>Lists all AI sessions (Claude Code, Codex, subagents). Answers: "Which sessions touched this project?"</p>
+<h3 id="command-syntax_2">Command Syntax</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h3 id="basic-usage_2">Basic Usage</h3>
+<p><strong>List 20 most recent sessions (default):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list
+</code></pre></div>
+<p><strong>List ALL sessions:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p><strong>Show models used in each session:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>SATMO
+</code></pre></div>
+<h3 id="options_2">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory for trace lookup</td>
+</tr>
+<tr>
+<td><code>--limit &lt;N&gt;</code></td>
+<td><code>-n</code></td>
+<td>20</td>
+<td>Show N most recent (0 for all)</td>
+</tr>
+<tr>
+<td><code>--format &lt;table\|json&gt;</code></td>
+<td></td>
+<td><code>table</code></td>
+<td>Output format</td>
+</tr>
+<tr>
+<td><code>--columns &lt;SPEC&gt;</code></td>
+<td></td>
+<td>SATM</td>
+<td>Column specification</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-default-output-satm">Example: Default Output (SATM)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$ ai-blame transcript list
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Session ID                                  Agent          Start Time              Msgs
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>────────────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a       claude-code    2025-12-01 08:03        53
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>7f2d4e91-8a5c-4e1b-9c6e-2f8d4a3b9c5e       claude-code    2025-11-30 14:22        28
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>b1e5f9c3-6d2a-4f8e-9a1c-3e7b8f2d5a9c       codex-cli      2025-11-28 10:15        12
+</code></pre></div>
+<h3 id="example-with-models-satmo">Example: With Models (SATMO)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>$ ai-blame transcript list --columns SATMO
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Session ID                                  Agent          Start Time              Msgs  Models
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>──────────────────────────────────────────────────────────────────────────────────────────────
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a       claude-code    2025-12-01 08:03        53    claude-opus-4-5
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>7f2d4e91-8a5c-4e1b-9c6e-2f8d4a3b9c5e       claude-code    2025-11-30 14:22        28    claude-haiku
+</code></pre></div>
+<h3 id="column-layout-specification">Column Layout Specification</h3>
+<p>Use <code>--columns</code> to customize which columns appear:</p>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S</code></td>
+<td>Session ID</td>
+<td>Unique identifier (40 chars)</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>Agent</td>
+<td>Tool used (claude-code, codex-cli, etc.)</td>
+</tr>
+<tr>
+<td><code>T</code></td>
+<td>Start Time</td>
+<td>Session start timestamp</td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>Message Count</td>
+<td>Number of messages in session</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>Files Touched</td>
+<td>Number of files modified</td>
+</tr>
+<tr>
+<td><code>O</code></td>
+<td>Models Used</td>
+<td>Models used in this trace</td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>Last Message</td>
+<td>Preview of last assistant message (50 chars)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example layouts:</strong></p>
+<ul>
+<li><code>SATM</code> (default) — Session, Agent, Time, Messages</li>
+<li><code>SATMO</code> — Add Models column (helps identify subagents)</li>
+<li><code>ATOM</code> — Skip Session ID, focus on Agent/Time/Messages/Models</li>
+<li><code>SATMOL</code> — Everything</li>
+</ul>
+<hr />
+<h2 id="understanding-session-id-duplication">Understanding Session ID Duplication</h2>
+<p>You may see the same Session ID multiple times in <code>transcript list</code>. <strong>This is normal</strong> and happens when:</p>
+<ol>
+<li><strong>Multi-agent sessions:</strong> Claude Code spawns subagents (Explore, Task, Plan) that share parent Session ID</li>
+<li><strong>Session spanning files:</strong> Long sessions split across multiple trace files</li>
+<li><strong>Agent differentiation:</strong> Using <code>--columns SATMO</code> shows which models were used</li>
+</ol>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Session ID                                  Agent          Models
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>────────────────────────────────────────────────────────────────────
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a       claude-code    claude-opus-4-5      (main session)
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a       claude-code    claude-haiku         (subagent 1)
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>483c7d95-6b9c-46db-afd4-3ecb6257781a       claude-code    claude-haiku         (subagent 2)
+</code></pre></div>
+<p>All three share the same Session ID but used different models. The main session typically uses more powerful model (Opus), subagents use faster model (Haiku).</p>
+<p><strong>→ Learn more:</strong> <a href="../../explanation/transcripts-and-subagents/">Transcripts &amp; Subagents</a></p>
+<hr />
+<h2 id="the-transcript-view-command">The <code>transcript view</code> Command</h2>
+<h3 id="what-it-does_3">What It Does</h3>
+<p>Displays a detailed transcript of a specific Claude Code or Codex session. Answers: "What exactly did this session do?"</p>
+<h3 id="command-syntax_3">Command Syntax</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>&lt;SESSION&gt;
+</code></pre></div>
+<h3 id="basic-usage_3">Basic Usage</h3>
+<p><strong>View by Session ID (substring match):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95
+</code></pre></div>
+<p><strong>View with full details:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--full
+</code></pre></div>
+<p><strong>Show AI reasoning (thinking blocks):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--show-thinking
+</code></pre></div>
+<p><strong>Show tool usage details:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--show-tools
+</code></pre></div>
+<h3 id="options_3">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--trace-dir &lt;TRACE_DIR&gt;</code></td>
+<td><code>-t</code></td>
+<td>Auto</td>
+<td>Claude trace directory</td>
+</tr>
+<tr>
+<td><code>--dir &lt;DIR&gt;</code></td>
+<td><code>-d</code></td>
+<td>cwd</td>
+<td>Target project directory</td>
+</tr>
+<tr>
+<td><code>--home &lt;HOME&gt;</code></td>
+<td></td>
+<td><code>~</code></td>
+<td>Home directory for trace lookup</td>
+</tr>
+<tr>
+<td><code>--format &lt;text\|markdown\|json&gt;</code></td>
+<td></td>
+<td><code>text</code></td>
+<td>Output format</td>
+</tr>
+<tr>
+<td><code>--full</code></td>
+<td></td>
+<td>False</td>
+<td>Show full content (don't truncate)</td>
+</tr>
+<tr>
+<td><code>--show-thinking</code></td>
+<td></td>
+<td>False</td>
+<td>Display thinking/chain-of-thought</td>
+</tr>
+<tr>
+<td><code>--show-tools</code></td>
+<td></td>
+<td>False</td>
+<td>Display tool use and results</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-output_2">Example Output</h3>
+<p><strong>Default (text, truncated):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Session: 483c7d95-6b9c-46db-afd4-3ecb6257781a
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Agent: claude-code
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Start: 2025-12-01 08:03:42 UTC
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Messages: 53
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Files Touched: 5
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>Models: claude-opus-4-5-20251101
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Working Directory: /Users/alice/myproject
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Trace File: ~/.claude/projects/-Users-alice-myproject/483c7d95.jsonl
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>─────────────────────────────────────────────────────────────────
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>User Message 1:
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>  Help me create a disease definitions schema
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>Claude Response 1:
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>  I&#39;ll create a LinkML schema for disease definitions. [creates file]...
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>User Message 2:
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>  Add phenotypes section
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>Claude Response 2:
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>  I&#39;ll extend the schema with phenotype associations... [truncated]
+</code></pre></div>
+<h3 id="output-formats">Output Formats</h3>
+<p><strong>Text (default):</strong></p>
+<p>Clean, terminal-friendly display with section breaks and controlled truncation. Good for interactive exploration.</p>
+<p><strong>Markdown:</strong></p>
+<p>GitHub-flavored markdown suitable for documentation or GitHub issues:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>&gt;<span class="w"> </span>session.md
+</code></pre></div>
+<p><strong>JSON:</strong></p>
+<p>Complete machine-readable transcript with all fields:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<p>Good for programmatic processing or archiving.</p>
+<hr />
+<h2 id="common-exploration-workflows">Common Exploration Workflows</h2>
+<h3 id="workflow-1-project-overview-5-minutes">Workflow 1: Project Overview (5 minutes)</h3>
+<p>Understanding what you're working with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Step 1: See overall statistics</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>ai-blame<span class="w"> </span>stats
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Step 2: View timeline of changes</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>ai-blame<span class="w"> </span>timeline
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Output shows: how many traces, what changed, what changed when</span>
+</code></pre></div>
+<h3 id="workflow-2-session-discovery-10-minutes">Workflow 2: Session Discovery (10 minutes)</h3>
+<p>Finding specific sessions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Step 1: List all sessions</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span><span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Step 2: View a specific session</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Step 3: For more detail</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--full<span class="w"> </span>--show-thinking
+</code></pre></div>
+<h3 id="workflow-3-understanding-subagents-5-minutes">Workflow 3: Understanding Subagents (5 minutes)</h3>
+<p>When Claude spawned helper agents:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Step 1: Look for repeated Session IDs with different models</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Step 2: View the main session</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--full
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Step 3: Learn about subagent architecture</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="c1"># (See: Understanding Subagents documentation)</span>
+</code></pre></div>
+<h3 id="workflow-4-file-history-3-minutes">Workflow 4: File History (3 minutes)</h3>
+<p>What happened to a specific file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># See when it was created/modified</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;config.yaml&quot;</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># See all sessions that touched it</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;config.yaml&quot;</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Line-by-line attribution</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>ai-blame<span class="w"> </span>blame<span class="w"> </span>config.yaml
+</code></pre></div>
+<hr />
+<h2 id="filtering-and-searching">Filtering and Searching</h2>
+<h3 id="filter-by-file-pattern">Filter by File Pattern</h3>
+<p>Show only changes to YAML files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+</code></pre></div>
+<p>Filter by directory:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;docs/&quot;</span>
+</code></pre></div>
+<h3 id="find-sessions-with-specific-models">Find Sessions with Specific Models</h3>
+<p>Use <code>--columns SATMO</code> to show models:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="c1"># Then identify sessions that used specific model (e.g., claude-opus-4-5)</span>
+</code></pre></div>
+<h3 id="show-latest-n-sessions">Show Latest N Sessions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Show last 5</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Show last 50</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1"># Show all</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<hr />
+<h2 id="advanced-patterns">Advanced Patterns</h2>
+<h3 id="export-session-as-documentation">Export Session as Documentation</h3>
+<p>Create a markdown record of what was done:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>--full<span class="w"> </span>&gt;<span class="w"> </span>session-doc.md
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="c1"># Share with team or archive</span>
+</code></pre></div>
+<h3 id="programmatic-access">Programmatic Access</h3>
+<p>Extract data as JSON for tooling:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0].session_id&#39;</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.messages[0]&#39;</span>
+</code></pre></div>
+<h3 id="compare-sessions">Compare Sessions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># List all with models</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span><span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># View specific sessions to compare</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>&lt;session-1&gt;<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>&gt;<span class="w"> </span>s1.md
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>&lt;session-2&gt;<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>&gt;<span class="w"> </span>s2.md
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="c1"># Diff</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>diff<span class="w"> </span>s1.md<span class="w"> </span>s2.md
+</code></pre></div>
+<hr />
+<h2 id="interpreting-session-information">Interpreting Session Information</h2>
+<h3 id="session-id">Session ID</h3>
+<p>Unique identifier for the user-initiated session. Multiple trace files can share the same Session ID (subagents).</p>
+<h3 id="agent">Agent</h3>
+<p>The tool that ran: <code>claude-code</code>, <code>codex-cli</code>, etc.</p>
+<h3 id="start-time">Start Time</h3>
+<p>When the session started (UTC).</p>
+<h3 id="messages">Messages</h3>
+<p>Total messages exchanged (user prompts + Claude responses).</p>
+<h3 id="files-touched">Files Touched</h3>
+<p>Number of files modified. Note: Subagent sessions may show 0 if they only read files.</p>
+<h3 id="models">Models</h3>
+<p>AI models used. Helps distinguish:
+- <strong>claude-opus-4-5</strong> — Main session (powerful model)
+- <strong>claude-haiku</strong> — Subagent (faster, lighter)
+- <strong>gpt-4</strong> — Copilot/Codex sessions</p>
+<hr />
+<h2 id="tips-best-practices">Tips &amp; Best Practices</h2>
+<h3 id="tip-1-start-with-stats">Tip 1: Start with Stats</h3>
+<p>Always begin with <code>ai-blame stats</code> to understand scope:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ai-blame<span class="w"> </span>stats
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="c1"># Good: &quot;Ah, 47 edits across 23 files&quot;</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>ai-blame<span class="w"> </span>timeline
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="c1"># Now: &quot;Timeline shows creation on Dec 1, major edit Dec 15&quot;</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="c1"># Find: &quot;3 sessions, mostly claude-code&quot;</span>
+</code></pre></div>
+<h3 id="tip-2-use-models-to-identify-subagents">Tip 2: Use Models to Identify Subagents</h3>
+<p>Subagents typically use different (faster) models:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1"># Look for: Same Session ID, different models</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="c1"># Opus = main, Haiku = subagents</span>
+</code></pre></div>
+<h3 id="tip-3-export-before-archiving">Tip 3: Export Before Archiving</h3>
+<p>Keep historical records:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>&gt;<span class="w"> </span>archive/session-483c7d95.md
+</code></pre></div>
+<h3 id="tip-4-combine-filters">Tip 4: Combine Filters</h3>
+<p>Get exactly what you need:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># YAML files only</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>ai-blame<span class="w"> </span>timeline<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;.yaml&quot;</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="c1"># Recent sessions only</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span>--columns<span class="w"> </span>SATMO
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="c1"># Specific directory</span>
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;docs/&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="no-traces-found">No traces found</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Verify trace directory exists</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>ls<span class="w"> </span>~/.claude/projects/
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Use explicit path</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>ai-blame<span class="w"> </span>stats<span class="w"> </span>--trace-dir<span class="w"> </span>/path/to/traces
+</code></pre></div>
+<h3 id="session-id-not-found">Session ID not found</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Try listing first</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>list
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1"># Use more characters of ID</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95-6b9c-46db
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="c1"># Use full path</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>~/.claude/projects/.../483c7d95.jsonl
+</code></pre></div>
+<h3 id="output-truncated">Output truncated</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Use --full to see everything</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--full
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Or export as markdown</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>ai-blame<span class="w"> </span>transcript<span class="w"> </span>view<span class="w"> </span>483c7d95<span class="w"> </span>--format<span class="w"> </span>markdown<span class="w"> </span>&gt;<span class="w"> </span>full.md
+</code></pre></div>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><strong><a href="../blame-analysis/">Line-Level Analysis</a></strong> — Line-by-line attribution in files</li>
+<li><strong><a href="../../explanation/transcripts-and-subagents/">Understanding Subagents</a></strong> — Deep dive into multi-agent sessions</li>
+<li><strong><a href="../annotation/">Provenance Annotation</a></strong> — Embedding what you discover</li>
+<li><strong><a href="../performance/">Performance</a></strong> — Optimizing trace exploration</li>
+<li><strong><a href="../cli/#ai-blame-stats">CLI Reference: stats</a></strong> — Syntax reference</li>
+<li><strong><a href="../cli/#ai-blame-timeline">CLI Reference: timeline</a></strong> — Syntax reference</li>
+<li><strong><a href="../cli/#ai-blame-transcript-list">CLI Reference: transcript</a></strong> — Syntax reference</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<p>After exploring traces, you can:</p>
+<ol>
+<li><strong>Annotate:</strong> Use what you learned to add provenance with <a href="../annotation/">Provenance Annotation</a></li>
+<li><strong>Analyze:</strong> Dive deeper with <a href="../blame-analysis/">Line-Level Analysis</a></li>
+<li><strong>Optimize:</strong> Speed up with <a href="../performance/">Performance</a></li>
+<li><strong>Understand:</strong> Learn the system with <a href="../../explanation/how-it-works/">How It Works</a></li>
+</ol>
+<p>Start with <a href="../annotation/">Provenance Annotation</a> to take action on what you discovered.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.sections", "navigation.expand", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
