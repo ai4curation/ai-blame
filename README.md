@@ -7,6 +7,7 @@
 [![Crates.io](https://img.shields.io/crates/v/ai-blame.svg)](https://crates.io/crates/ai-blame)
 [![PyPI](https://img.shields.io/pypi/v/ai-blame.svg)](https://pypi.org/project/ai-blame/)
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://ai4curation.github.io/ai-blame)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ai4curation/ai-blame)
 
 **Extract provenance from AI agent execution traces.**
 
