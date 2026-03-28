@@ -66,11 +66,18 @@ fn extract_tool_use_id_from_tool_result_record(record: &Value) -> Option<String>
 }
 
 fn is_codex_model(model: &str) -> bool {
-    // Check for known OpenAI Codex and GPT model prefixes used by GitHub Copilot
+    // Check for known OpenAI Codex and GPT model prefixes used by Codex CLI / GitHub Copilot
     model.starts_with("codex-")
         || model.starts_with("gpt-4")
         || model.starts_with("gpt-3.5")
         || model.starts_with("gpt-35")
+        || model.starts_with("gpt-5")
+        || model.starts_with("o1-")
+        || model.starts_with("o3-")
+        || model.starts_with("o4-")
+        || model == "o1"
+        || model == "o3"
+        || model == "o4"
 }
 
 fn infer_agent_tool(trace_path: &Path, record: &Value) -> String {
