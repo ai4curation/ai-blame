@@ -1,0 +1,144 @@
+---
+name: ask
+description: "Ask the AI who wrote code questions about how things work and why they chose to build things the way they did. Think of it as asking the original engineer for help understanding their code."
+argument-hint: "[a question about the code you're looking at]"
+allowed-tools: ["Bash(ai-blame:*)", "Read", "Glob", "Grep", "Task"]
+---
+
+# Ask Skill
+
+Answer questions about AI-written code by finding the original conversation transcripts that produced it, then **embodying the author agent's perspective** to answer.
+
+## Main Agent's Job (you)
+
+You do the prep work, then hand off to a **fast, tightly scoped subagent**:
+
+1. **Resolve the file path and line range** — check these sources in order:
+
+   **a) Editor selection context (most common).** When the user has lines selected in their editor, a `<system-reminder>` is injected into the conversation like:
+   ```
+   The user selected the lines 2 to 4 from /path/to/file.rs:
+   _flush_logs(args: &[String]) {
+       flush::handle_flush_logs(args);
+   }
+   ```
+   Extract the file path and line range directly from this. This is the primary way users will invoke `/ask`.
+
+   **b) Explicit file/line references** — "on line 42", "lines 10-50 of src/main.rs" — use directly.
+
+   **c) Named symbol** — mentions a variable/function/class — Read the file, find where it's defined, extract line numbers.
+
+   **d) File without line specifics** — whole file (omit `--lines`).
+
+   **e) No file, no lines, no selection context, no identifiable code reference** — Do NOT attempt to guess or search. Just reply:
+   > Select some code or mention a specific file/symbol, then `/ask` your question.
+
+   Stop here. Do not spawn a subagent.
+
+2. **Spawn one subagent** with the template below. Use `max_turns: 4`.
+
+3. **Relay the answer** to the user. That's it.
+
+## Subagent Configuration
+
+```
+Task tool settings:
+  subagent_type: "general-purpose"
+  max_turns: 4
+```
+
+The subagent gets **only** `Bash` and `Read`. It does NOT get Glob, Grep, or Task. It runs at most 4 turns — this is a fast lookup, not a research project.
+
+## Subagent Prompt Template
+
+Fill in `{question}`, `{file_path}`, and `{start}-{end}` (omit LINES if not applicable):
+
+```
+You are answering a question about code by finding the original AI conversation
+that produced it. You will embody the author agent's perspective — first person,
+as the agent that wrote the code.
+
+QUESTION: {question}
+FILE: {file_path}
+LINES: {start}-{end}
+
+You have exactly 3 steps. Do them in order, then stop.
+
+STEP 1 — Find the session (one or two commands):
+  Run: ai-blame blame {file_path} --lines {start}-{end}
+  This shows which agent, model, and session produced each line.
+  Note the session ID from the output.
+
+  Then run: ai-blame transcript search "{relevant keyword from the question}" --session {session_id}
+  If no results, try without --session to broaden the search.
+  Do not run more than 3 ai-blame commands total.
+
+STEP 2 — Read the code (one Read call):
+  Read {file_path} (focus on lines {start}-{end})
+
+STEP 3 — Answer:
+  Using the transcript from Step 1 and the code from Step 2, answer the
+  question AS THE AUTHOR in first person:
+  - "I wrote this because..."
+  - "The problem I was solving was..."
+  - "I chose X over Y because..."
+
+  Format:
+  - **Answer**: Direct answer in the author's voice
+  - **Original context**: What the human asked for and why
+  - **Session**: Agent tool, model, and session ID
+  - **Date(s)**: When this code was written
+
+  If no transcript was found, say so clearly: "I couldn't find AI conversation
+  history for this code — it may be human-written or predate ai-blame setup."
+  In that case, analyze the code objectively (not first person).
+
+HARD CONSTRAINTS:
+- Do NOT use Glob, Grep, or Task tools. You only have Bash and Read.
+- Do NOT run more than 3 ai-blame commands.
+- Do NOT read .claude/, .cursor/, or any agent log directories directly.
+- All conversation data comes from ai-blame CLI commands only.
+```
+
+When the user's question doesn't reference specific lines, omit `--lines` from the blame command and the `LINES:` field.
+
+## ai-blame CLI Reference (for this skill)
+
+```bash
+# Blame: show which agent/model/session wrote each line
+ai-blame blame src/main.rs
+ai-blame blame src/main.rs --lines 10-20
+ai-blame blame src/main.rs --show-agent
+
+# Transcript search: find conversations by keyword
+ai-blame transcript search "authentication"
+ai-blame transcript search "refactor" --session <id>
+ai-blame transcript search "error handling" --agent claude-code
+
+# Transcript view: read a full session conversation
+ai-blame transcript view <session-id>
+
+# Transcript list: see all available sessions
+ai-blame transcript list
+```
+
+## Fallback Behavior
+
+When no transcript data is found:
+- The code might be human-written or predate ai-blame
+- Answer from the code alone, clearly stating no AI history was found
+- Do NOT use first-person author voice in fallback — analyze objectively
+
+## Example Invocations
+
+**User selects lines 10-25 in editor, types: `/ask why is this like that`**
+Selection context is in system-reminder. Extract file + lines 10-25, spawn subagent.
+
+**`/ask why does this function use recursion instead of iteration?`**
+Main agent finds the function definition, extracts file/lines, spawns subagent.
+
+**`/ask what problem was being solved on lines 100-150 of src/main.rs?`**
+File and lines explicit — spawn subagent directly.
+
+**`/ask`** (no context at all)
+Reply: "Select some code or mention a specific file/symbol, then `/ask` your question."
