@@ -201,7 +201,7 @@ impl CodexParser {
         }
 
         let mut snapshots: Vec<SnapshotState> = Vec::new();
-        let mut model = "gpt-5.2-codex".to_string();
+        let mut model = "codex-mini-latest".to_string();
 
         for line in reader.lines() {
             let line = line?;

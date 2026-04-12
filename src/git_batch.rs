@@ -152,6 +152,12 @@ mod tests {
             .current_dir(&repo_path)
             .output()?;
 
+        // Disable commit signing for tests
+        Command::new("git")
+            .args(["config", "commit.gpgsign", "false"])
+            .current_dir(&repo_path)
+            .output()?;
+
         Ok((dir, repo_path))
     }
 
