@@ -215,11 +215,30 @@ rules:
 
 ## Supported Agents
 
-| Agent | Status |
-|-------|--------|
-| Claude Code | ✅ Supported |
-| OpenAI Codex / GitHub Copilot | ✅ Supported |
-| Others | PRs welcome! |
+| Agent | Status | Format |
+|-------|--------|--------|
+| Claude Code | ✅ Supported | Native `.jsonl` traces under `~/.claude/` |
+| OpenAI Codex / GitHub Copilot | ✅ Supported | Native `.jsonl` traces (incl. CLI ghost snapshots) |
+| Amp, Cursor, Goose, Cline, Kimi, … | ✅ Supported via [agent-trace.dev](https://agent-trace.dev/) | `.agent-trace/*.json` v1 sidecars (any producer) |
+| Others | PRs welcome! | |
+
+### agent-trace.dev v1
+
+ai-blame reads the open, vendor-neutral
+[agent-trace.dev v1 spec](https://agent-trace.dev/) from
+`<repo>/.agent-trace/*.json` (and `~/.agent-trace/`). Any tool that
+emits the spec — whether as a first-party feature or via a third-party
+exporter that converts an agent's native logs — is automatically
+supported.
+
+> agent-trace.dev records carry attribution ranges + `content_hash`
+> rather than raw `old_string` / `new_string` patches, so the `stats`,
+> `timeline`, `report`, and `transcript` commands work fully against
+> them; `blame` / `annotate` will mark touched lines with metadata but
+> cannot perform the same patch-walk reconstruction as the native Claude
+> / Codex parsers. See
+> [`src/parsers/agent_trace.rs`](src/parsers/agent_trace.rs) for the
+> mapping details.
 
 ## Differences from Python Version
 

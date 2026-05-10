@@ -155,9 +155,33 @@ pub fn get_codex_trace_dirs() -> Vec<PathBuf> {
     dirs
 }
 
+/// Locate agent-trace.dev v1 sidecar directories. The spec is storage-agnostic
+/// but the conventional layout is `<repo>/.agent-trace/*.json`, so we look in
+/// the project root and the user's home as fallbacks.
+pub fn get_agent_trace_dirs() -> Vec<PathBuf> {
+    let mut dirs = Vec::new();
+
+    if let Ok(cwd) = std::env::current_dir() {
+        let local = cwd.join(".agent-trace");
+        if local.exists() {
+            dirs.push(local);
+        }
+    }
+
+    if let Some(home) = dirs::home_dir() {
+        let user_dir = home.join(".agent-trace");
+        if user_dir.exists() {
+            dirs.push(user_dir);
+        }
+    }
+
+    dirs
+}
+
 pub fn get_all_trace_dirs(claude_dir: &Path) -> Vec<PathBuf> {
     let mut dirs = vec![claude_dir.to_path_buf()];
     dirs.extend(get_codex_trace_dirs());
+    dirs.extend(get_agent_trace_dirs());
     dirs
 }
 

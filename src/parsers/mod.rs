@@ -4,6 +4,7 @@ use crate::models::EditRecord;
 use anyhow::Result;
 use std::path::Path;
 
+pub mod agent_trace;
 pub mod claude;
 pub mod codex;
 pub mod common;
@@ -254,6 +255,11 @@ impl ParserRegistry {
     pub fn new() -> Self {
         Self {
             parsers: vec![
+                // agent-trace.dev v1 sidecars are checked first because their
+                // discriminator (`.json` extension + spec-shaped fields) is
+                // unambiguous and keeps the other parsers from being asked to
+                // peek inside spec records.
+                Box::new(agent_trace::AgentTraceParser::new()),
                 Box::new(claude::ClaudeParser::new()),
                 Box::new(codex::CodexParser::new()),
             ],
