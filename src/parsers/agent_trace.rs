@@ -114,8 +114,11 @@ struct Conversation {
 
 #[derive(Debug, Deserialize, Clone)]
 struct Contributor {
+    /// Spec values: `"human" | "ai" | "mixed" | "unknown"`. We surface this
+    /// when `model_id` is missing so downstream output isn't a flat
+    /// `unknown`.
     #[serde(default, rename = "type")]
-    _ty: Option<String>,
+    ty: Option<String>,
     #[serde(default)]
     model_id: Option<String>,
 }
@@ -145,16 +148,29 @@ struct Related {
 // Helpers.
 // ---------------------------------------------------------------------------
 
-/// Pull a useful session identifier out of a conversation. Prefer the
-/// conversation `url` (e.g. `https://ampcode.com/threads/T-abc...`) since
-/// that is the most stable cross-tool handle. Fall back to the first
-/// `related[type=session]` entry, then to `unknown`.
+/// Pull a useful session identifier out of a conversation.
+///
+/// Order of preference:
+///   1. The trailing path segment of the conversation `url` (e.g. the
+///      `T-019d…` thread id from `https://ampcode.com/threads/T-019d…`).
+///      That is what other parsers use for `session_id`, and short ids are
+///      easier to correlate across tools than full URLs.
+///   2. The trailing segment of the first `related[type=session]` URN
+///      (e.g. `T-019d…` from `urn:sq-agents:session:amp:T-019d…`).
+///   3. The full URL / URN if no clean trailing segment can be extracted.
+///   4. `"unknown"` if neither field is present.
 fn session_id_for(conv: &Conversation) -> String {
-    if let Some(url) = conv.url.as_ref().filter(|s| !s.is_empty()) {
-        return url.clone();
+    if let Some(url) = conv.url.as_deref().filter(|s| !s.is_empty()) {
+        if let Some(id) = trailing_segment(url) {
+            return id;
+        }
+        return url.to_string();
     }
     for r in &conv.related {
         if r.ty == "session" {
+            if let Some(id) = trailing_segment(&r.url) {
+                return id;
+            }
             return r.url.clone();
         }
     }
@@ -163,22 +179,105 @@ fn session_id_for(conv: &Conversation) -> String {
 
 /// Resolve the model ID for a range, preferring the per-range contributor
 /// override if present (spec §6.1, $defs/range.contributor).
-fn model_for_range<'a>(range: &'a Range, conv: &'a Conversation) -> &'a str {
-    if let Some(c) = range.contributor.as_ref() {
+///
+/// When `model_id` is missing on both, fall back to the contributor `type`
+/// (e.g. `ai`, `human`, `mixed`) so reports show *something* useful instead
+/// of a flat `unknown`. Only `unknown` is returned when there is genuinely
+/// no contributor information at all.
+fn model_for_range(range: &Range, conv: &Conversation) -> String {
+    for c in [range.contributor.as_ref(), conv.contributor.as_ref()]
+        .into_iter()
+        .flatten()
+    {
         if let Some(m) = c.model_id.as_deref() {
             if !m.is_empty() {
-                return m;
+                return m.to_string();
             }
         }
     }
-    if let Some(c) = conv.contributor.as_ref() {
-        if let Some(m) = c.model_id.as_deref() {
-            if !m.is_empty() {
-                return m;
+    for c in [range.contributor.as_ref(), conv.contributor.as_ref()]
+        .into_iter()
+        .flatten()
+    {
+        if let Some(t) = c.ty.as_deref() {
+            if !t.is_empty() {
+                // Mark this as a degraded value so downstream consumers can
+                // tell "we know it was AI but not which model" apart from a
+                // genuine, fully-populated `model_id` like
+                // `anthropic/claude-opus-4-5`.
+                return format!("{} (model unspecified)", t);
             }
         }
     }
-    "unknown"
+    "unknown".to_string()
+}
+
+/// Derive a best-effort agent identifier for a conversation, given the
+/// top-level record `tool.name` as a fallback.
+///
+/// Producers SHOULD set `tool.name` at record level, but the spec also
+/// requires `tool.version` whenever `tool` is present. Some emitters omit
+/// the whole `tool` block when they don't have a version, which would
+/// erase the agent identity entirely. To preserve information we look at:
+///
+///   1. The record-level `tool.name` (when present).
+///   2. The conversation URL hostname (e.g. `ampcode.com` → `amp`,
+///      `cursor.sh` / `cursor.com` → `cursor`, `claude.ai` → `claude-code`).
+///   3. The session URN agent slug (`urn:<scheme>:session:<agent>:<id>`).
+///   4. `"agent-trace"` if nothing else is available.
+fn agent_for_conversation(conv: &Conversation, record_tool_name: Option<&str>) -> String {
+    if let Some(n) = record_tool_name.filter(|s| !s.is_empty()) {
+        return n.to_string();
+    }
+    if let Some(url) = conv.url.as_deref() {
+        if let Some(slug) = agent_from_url_host(url) {
+            return slug.to_string();
+        }
+    }
+    for r in &conv.related {
+        if r.ty == "session" {
+            if let Some(slug) = agent_from_session_urn(&r.url) {
+                return slug.to_string();
+            }
+        }
+    }
+    "agent-trace".to_string()
+}
+
+/// Map well-known conversation URL hosts to short agent slugs.
+fn agent_from_url_host(url: &str) -> Option<&'static str> {
+    // Cheap manual host extraction — no need to pull in a URL crate just
+    // for hostname matching.
+    let after_scheme = url.split_once("://").map(|(_, r)| r).unwrap_or(url);
+    let host = after_scheme.split('/').next().unwrap_or("");
+    let host = host.split('@').next_back().unwrap_or(host); // strip any user-info
+    let host = host.split(':').next().unwrap_or(host); // strip port
+
+    match host {
+        h if h.ends_with("ampcode.com") => Some("amp"),
+        h if h.ends_with("cursor.sh") || h.ends_with("cursor.com") => Some("cursor"),
+        h if h.ends_with("claude.ai") => Some("claude-code"),
+        h if h.ends_with("openai.com") || h.ends_with("chatgpt.com") => Some("codex"),
+        h if h.ends_with("block.xyz") => Some("goose"),
+        _ => None,
+    }
+}
+
+/// Parse the agent slug out of a session URN of the form
+/// `urn:<namespace>:session:<agent>:<id>` (or any variation that puts the
+/// agent immediately after a `session` segment).
+fn agent_from_session_urn(urn: &str) -> Option<&str> {
+    let parts: Vec<&str> = urn.split(':').collect();
+    let idx = parts.iter().position(|p| *p == "session")?;
+    parts.get(idx + 1).copied().filter(|s| !s.is_empty())
+}
+
+/// Return the trailing non-empty path / URN segment, splitting on both `/`
+/// and `:` so it works for HTTPS URLs and `urn:` identifiers alike.
+fn trailing_segment(s: &str) -> Option<String> {
+    let trimmed = s.trim_end_matches(['/', ':']);
+    let last = trimmed.rsplit(['/', ':']).find(|seg| !seg.is_empty())?;
+    Some(last.to_string())
 }
 
 /// Recursively collect `*.json` files (the spec's sidecar extension) from a
@@ -266,12 +365,12 @@ impl TraceParser for AgentTraceParser {
         };
 
         let timestamp = record.timestamp.unwrap_or_else(Utc::now);
-        let (agent_tool, agent_version) = match record.tool {
-            Some(t) => (
-                t.name.unwrap_or_else(|| "agent-trace".to_string()),
-                t.version,
-            ),
-            None => ("agent-trace".to_string(), None),
+        // Pull what we can out of the (optional) record-level `tool` block.
+        // Per-conversation derivation below will use `record_tool_name` as
+        // its preferred source, then fall back to URL/URN sniffing.
+        let (record_tool_name, agent_version) = match record.tool {
+            Some(t) => (t.name, t.version),
+            None => (None, None),
         };
 
         let mut edits = Vec::new();
@@ -284,9 +383,13 @@ impl TraceParser for AgentTraceParser {
 
             for conv in file_entry.conversations {
                 let session_id = session_id_for(&conv);
+                // Derive per-conversation so a single record covering
+                // multiple agents (e.g. a hand-off) attributes each
+                // conversation correctly.
+                let agent_tool = agent_for_conversation(&conv, record_tool_name.as_deref());
 
                 for range in &conv.ranges {
-                    let model = model_for_range(range, &conv).to_string();
+                    let model = model_for_range(range, &conv);
                     let line_span = range
                         .end_line
                         .saturating_sub(range.start_line.saturating_sub(1));
@@ -389,8 +492,8 @@ mod tests {
         assert_eq!(first.agent_tool, "amp-cli");
         assert_eq!(first.agent_version.as_deref(), Some("0.1.85"));
         assert_eq!(
-            first.session_id,
-            "https://ampcode.com/threads/T-019d872e-ff8e-760c-8686-6850d686a3f5"
+            first.session_id, "T-019d872e-ff8e-760c-8686-6850d686a3f5",
+            "session_id is the trailing path segment of the conversation URL"
         );
         assert!(
             first.is_create,
@@ -423,7 +526,7 @@ mod tests {
                 "path": "a.rs",
                 "conversations": [{
                     "ranges": [{"start_line": 5, "end_line": 5}],
-                    "related": [{"type": "session", "url": "urn:agent:session:foo"}]
+                    "related": [{"type": "session", "url": "urn:agent:session:foo:abc-123"}]
                 }]
             }]
         }"#;
@@ -431,10 +534,104 @@ mod tests {
         let path = write_sample(dir.path(), body);
         let edits = AgentTraceParser::new().parse_file(&path, "").unwrap();
         assert_eq!(edits.len(), 1);
-        assert_eq!(edits[0].session_id, "urn:agent:session:foo");
+        assert_eq!(
+            edits[0].session_id, "abc-123",
+            "trailing URN segment becomes the session id"
+        );
         assert_eq!(edits[0].model, "unknown");
-        assert_eq!(edits[0].agent_tool, "agent-trace");
+        assert_eq!(
+            edits[0].agent_tool, "foo",
+            "agent slug is recovered from the URN even with no top-level tool block"
+        );
         assert!(edits[0].agent_version.is_none());
+    }
+
+    #[test]
+    fn derives_agent_from_amp_url_when_tool_block_absent() {
+        // Real-world shape: producer omitted the tool block (spec requires
+        // both name AND version, so emitters that lack version drop the
+        // whole block) but the conversation URL identifies the agent.
+        let body = r#"{
+            "version": "1.0",
+            "id": "x",
+            "timestamp": "2026-04-13T14:12:21Z",
+            "files": [{
+                "path": "main.rs",
+                "conversations": [{
+                    "url": "https://ampcode.com/threads/T-019d872e",
+                    "contributor": {"type": "ai"},
+                    "ranges": [{"start_line": 1, "end_line": 1}]
+                }]
+            }]
+        }"#;
+        let dir = tempdir().unwrap();
+        let path = write_sample(dir.path(), body);
+        let edits = AgentTraceParser::new().parse_file(&path, "").unwrap();
+        assert_eq!(edits.len(), 1);
+        assert_eq!(edits[0].agent_tool, "amp");
+        assert_eq!(edits[0].session_id, "T-019d872e");
+        assert_eq!(
+            edits[0].model, "ai (model unspecified)",
+            "contributor.type fills in when model_id is missing"
+        );
+    }
+
+    #[test]
+    fn agent_url_host_mapping() {
+        assert_eq!(
+            agent_from_url_host("https://ampcode.com/threads/T-1"),
+            Some("amp")
+        );
+        assert_eq!(
+            agent_from_url_host("https://app.cursor.com/x"),
+            Some("cursor")
+        );
+        assert_eq!(agent_from_url_host("https://cursor.sh/x"), Some("cursor"));
+        assert_eq!(
+            agent_from_url_host("https://claude.ai/chat/x"),
+            Some("claude-code")
+        );
+        assert_eq!(agent_from_url_host("https://chatgpt.com/x"), Some("codex"));
+        assert_eq!(
+            agent_from_url_host("https://goose.block.xyz/x"),
+            Some("goose")
+        );
+        assert_eq!(agent_from_url_host("https://example.invalid/x"), None);
+    }
+
+    #[test]
+    fn agent_session_urn_extraction() {
+        assert_eq!(
+            agent_from_session_urn("urn:sq-agents:session:amp:T-019d872e"),
+            Some("amp")
+        );
+        assert_eq!(
+            agent_from_session_urn("urn:agent:session:cursor:abc"),
+            Some("cursor")
+        );
+        assert_eq!(agent_from_session_urn("urn:foo:bar:baz"), None);
+    }
+
+    #[test]
+    fn record_tool_name_takes_priority_over_url_sniffing() {
+        let body = r#"{
+            "version": "1.0",
+            "id": "x",
+            "timestamp": "2026-04-13T14:12:21Z",
+            "tool": {"name": "bespoke-agent", "version": "9.9"},
+            "files": [{
+                "path": "a.rs",
+                "conversations": [{
+                    "url": "https://ampcode.com/threads/T-1",
+                    "ranges": [{"start_line": 1, "end_line": 1}]
+                }]
+            }]
+        }"#;
+        let dir = tempdir().unwrap();
+        let path = write_sample(dir.path(), body);
+        let edits = AgentTraceParser::new().parse_file(&path, "").unwrap();
+        assert_eq!(edits[0].agent_tool, "bespoke-agent");
+        assert_eq!(edits[0].agent_version.as_deref(), Some("9.9"));
     }
 
     #[test]
